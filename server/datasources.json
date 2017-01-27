@@ -2,5 +2,15 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "mongoDB": {
+    "host": "0.0.0.0",
+    "port": 27017,
+    "url": "mongodb://0.0.0.0:27017/bloodrush",
+    "database": "bloodrush",
+    "password": "",
+    "name": "mongoDB",
+    "user": "",
+    "connector": "mongodb"
   }
 }
