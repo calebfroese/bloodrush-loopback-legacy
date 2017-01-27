@@ -14,23 +14,13 @@
     "acronym": {
       "type": "string",
       "required": true
-    },
-    "players": {
-      "type": [
-        "object"
-      ]
     }
   },
   "validations": [],
   "relations": {
-    "team": {
-      "type": "belongsTo",
-      "model": "User",
-      "foreignKey": ""
-    },
-    "league": {
-      "type": "belongsTo",
-      "model": "league",
+    "players": {
+      "type": "hasMany",
+      "model": "player",
       "foreignKey": ""
     }
   },

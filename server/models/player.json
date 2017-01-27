@@ -1,25 +1,23 @@
 {
-  "name": "league",
-  "plural": "leagues",
+  "name": "player",
+  "plural": "players",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "name": {
+    "first": {
+      "type": "string",
+      "required": true
+    },
+    "last": {
       "type": "string",
       "required": true
     }
   },
   "validations": [],
-  "relations": {
-    "seasons": {
-      "type": "hasMany",
-      "model": "season",
-      "foreignKey": ""
-    }
-  },
+  "relations": {},
   "acls": [],
   "methods": {}
 }

@@ -32,15 +32,19 @@
     "dataSource": "db",
     "public": false
   },
-  "team": {
-    "dataSource": "mongoDB",
-    "public": true
-  },
   "league": {
     "dataSource": "mongoDB",
     "public": true
   },
   "season": {
+    "dataSource": "mongoDB",
+    "public": true
+  },
+  "team": {
+    "dataSource": "mongoDB",
+    "public": true
+  },
+  "player": {
     "dataSource": "mongoDB",
     "public": true
   }
