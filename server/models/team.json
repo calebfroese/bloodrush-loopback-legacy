@@ -22,6 +22,16 @@
       "type": "hasMany",
       "model": "player",
       "foreignKey": ""
+    },
+    "leagues": {
+      "type": "hasAndBelongsToMany",
+      "model": "league",
+      "foreignKey": ""
+    },
+    "league": {
+      "type": "belongsTo",
+      "model": "league",
+      "foreignKey": ""
     }
   },
   "acls": [],

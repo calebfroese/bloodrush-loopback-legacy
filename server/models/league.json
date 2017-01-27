@@ -18,6 +18,11 @@
       "type": "hasMany",
       "model": "season",
       "foreignKey": ""
+    },
+    "teams": {
+      "type": "hasMany",
+      "model": "team",
+      "foreignKey": ""
     }
   },
   "acls": [],
