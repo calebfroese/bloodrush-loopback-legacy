@@ -1,6 +1,7 @@
 var mailConfig = require('./email.config.js');
 var SparkPost = require('sparkpost');
 var client = new SparkPost(mailConfig.sparkpostApiKey);
+var internalQuery = require('./../internal-query.js');
 
 module.exports = {
     signup: (email, teamName, callback) => {
@@ -31,7 +32,10 @@ module.exports = {
             }
         }
         client.transmissions.send(params);
-        callback(token);
+        // Save the token to the user
+        internalQuery('/teams', teams => {
+            callback(teams);
+        })
     }
 }
 
