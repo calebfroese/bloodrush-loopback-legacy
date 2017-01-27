@@ -17,6 +17,7 @@
     "loopback-connector-mongodb": "^1.18.0",
     "loopback-datasource-juggler": "^2.39.0",
     "serve-favicon": "^2.0.1",
+    "sparkpost": "^2.1.2",
     "strong-error-handler": "^1.0.1"
   },
   "devDependencies": {

@@ -47,5 +47,17 @@
   "player": {
     "dataSource": "mongoDB",
     "public": true
+  },
+  "email": {
+    "dataSource": "mongoDB",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "sendActivation": true
+        }
+      }
+    }
   }
 }
