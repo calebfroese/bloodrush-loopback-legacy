@@ -14,22 +14,22 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "mongoDB"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "mongoDB",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "mongoDB",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "mongoDB",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "mongoDB",
     "public": false
   },
   "league": {
