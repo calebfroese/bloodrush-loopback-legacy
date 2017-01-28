@@ -42,7 +42,14 @@
   },
   "team": {
     "dataSource": "mongoDB",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "generate": true
+        }
+      }
+    }
   },
   "player": {
     "dataSource": "mongoDB",

@@ -19,6 +19,11 @@
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "init": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   },
   "validations": [],

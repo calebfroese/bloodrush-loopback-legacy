@@ -14,6 +14,31 @@
     "last": {
       "type": "string",
       "required": true
+    },
+    "atk": {
+      "type": "number",
+      "required": true,
+      "default": 50
+    },
+    "def": {
+      "type": "number",
+      "required": true,
+      "default": 50
+    },
+    "spd": {
+      "type": "number",
+      "required": true,
+      "default": 50
+    },
+    "kg": {
+      "type": "number",
+      "required": true,
+      "default": 50
+    },
+    "rec": {
+      "type": "number",
+      "required": true,
+      "default": 50
     }
   },
   "validations": [],
