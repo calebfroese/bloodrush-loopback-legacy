@@ -13,8 +13,6 @@ module.exports = (method, path, callback) => {
             return console.log('Invalid Status Code Returned:', response.statusCode);
         }
 
-        //All is good. Print the body
-        console.log(body); // Show the HTML for the Modulus homepage.
-
+        callback(JSON.parse(body));
     });
 }
