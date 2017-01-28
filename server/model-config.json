@@ -55,7 +55,8 @@
       "remoting": {
         "sharedMethods": {
           "*": false,
-          "sendActivation": true
+          "sendActivation": true,
+          "verifyEmail": true
         }
       }
     }

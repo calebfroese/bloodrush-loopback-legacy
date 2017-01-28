@@ -43,6 +43,17 @@ module.exports = {
             });
         });
 
+    },
+    verifyEmail: (token, callback) => {
+        // Fetch the team with the token
+        internalQuery('get', `/teams?filter={"token":"${token}"}`, {}, teams => {
+            var team = teams[0];
+            team.token = null;
+            team.verified = true;
+            internalQuery('patch', `/teams/${team.id}`, team, response => {
+                callback(response)
+            });
+        })
     }
 }
 
