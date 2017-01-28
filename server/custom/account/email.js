@@ -6,7 +6,7 @@ var internalQuery = require('./../internal-query.js');
 module.exports = {
     signup: (email, teamId, callback) => {
         // Generate a token
-        var token = makeid(12);
+        var token = teamId + '-' + makeid(20);
         var year = (new Date()).getFullYear();
         var yearNow = year;
         if (yearNow > 2017) {
@@ -18,9 +18,9 @@ module.exports = {
         internalQuery('get', `/teams/${teamId}`, {}, team => {
             // Patch the team
             // callback(team)
-            var newTeam = team;
-            newTeam.verified = true;
-            internalQuery('patch', `/teams/${teamId}`, newTeam, response => {
+            var updatedTeam = team;
+            updatedTeam.token = token;
+            internalQuery('patch', `/teams/${teamId}`, updatedTeam, response => {
                 console.log(response);
                 callback(response);
             });
