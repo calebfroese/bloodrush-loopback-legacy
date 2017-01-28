@@ -59,7 +59,6 @@ module.exports = {
             fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
             fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
         }
-        console.log('creating part');
         createImg(style, style.color, `public/player/gen/frame1/${style.name}.png`, `public/temp/player/${teamId}/frame1/${style.name}-${style.color.r}.${style.color.g}.${style.color.b}.png`);
     }
 }
@@ -85,12 +84,10 @@ var deleteFolderRecursive = function (path) {
 };
 
 function createImg(style, rgba, fromUrl, toUrl) {
-    console.log('creating image');
     if (style.hidden) {
         // Just copy the file over without recolor
         fs.createReadStream(fromUrl).pipe(fs.createWriteStream(toUrl));
     } else {
-        console.log('recolouring image and saving at', toUrl);
         fs.createReadStream(fromUrl)
             .pipe(new PNG({ filterType: 4 }))
             .on('parsed', function () {
@@ -109,9 +106,7 @@ function createImg(style, rgba, fromUrl, toUrl) {
 }
 
 function joinImg(styles, teamId, framenumber) {
-    console.log('joiing frame', framenumber)
     if (!fs.existsSync(`temp/player/${teamId}/frame${framenumber}`)) {
-        console.error('ERR! No frame number folder');
         fs.mkdirSync(`temp/player/${teamId}/frame${framenumber}`);
     }
     var base = images(`temp/player/${teamId}/frame${framenumber}/soles1.png`);
@@ -122,10 +117,12 @@ function joinImg(styles, teamId, framenumber) {
         quality: 100
     });
     setTimeout(() => {
-        console.log('200 delay, joinImg');
         // Finished saving by now
         jimp.read(`public/player/output/${teamId}-${framenumber}.png`, function (err, image) {
-            if (err) console.error(err);
+            if (err) {
+                console.error(err);
+                return;
+            }
             image
                 .flip(true, false)
                 .write(`public/player/output/${teamId}-${framenumber}r.png`);
