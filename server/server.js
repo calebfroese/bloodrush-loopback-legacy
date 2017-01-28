@@ -2,8 +2,12 @@
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');
-
 var app = module.exports = loopback();
+// Custom Requirements
+var multer = require('multer');
+var path = require('path');
+var cors = require('cors');
+var nodeSchedule = require('node-schedule');
 
 app.start = function() {
   // start the web server
@@ -44,14 +48,14 @@ app.post('/file/:teamId', upload.any(), (req, res) => {
         }
     }));
     // Save a note that the team has uploaded an image
-    mongo.query('teams', 'uploadImg', { _id: req.params.teamId }, (response) => {
-        // Done
+    // mongo.query('teams', 'uploadImg', { _id: req.params.teamId }, (response) => {
+    //     // Done
         console.log('image uploaded and saved')
-    });
+    // });
 });
 
 // Serve images out of /public
-app.use(express.static(__dirname + '/public'));
+app.use(loopback.static(__dirname + '/public'));
 
 
 
