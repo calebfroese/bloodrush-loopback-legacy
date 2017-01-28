@@ -19,6 +19,43 @@ app.start = function() {
 };
 
 
+
+
+// Image uploading
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/teamlogos')
+    },
+    filename: function (req, file, cb) {
+        cb(null, req.params.teamId + '.png')
+    }
+});
+var upload = multer({ storage: storage });
+
+app.post('/file/:teamId', upload.any(), (req, res) => {
+    if (!req.params.teamId) {
+        return;
+    }
+    res.json(req.files.map(file => {
+        var ext = path.extname(file.originalname);
+        return {
+            originalName: req.params.teamId,
+            filename: file.filename
+        }
+    }));
+    // Save a note that the team has uploaded an image
+    mongo.query('teams', 'uploadImg', { _id: req.params.teamId }, (response) => {
+        // Done
+        console.log('image uploaded and saved')
+    });
+});
+
+// Serve images out of /public
+app.use(express.static(__dirname + '/public'));
+
+
+
+
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
 boot(app, __dirname, function(err) {
