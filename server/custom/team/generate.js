@@ -1,5 +1,6 @@
 'use strict';
 
+var config = require('./../config.js');
 var internalQuery = require('./../internal-query.js');
 var genPlayer = require('./../player/generate.js');
 
@@ -31,7 +32,7 @@ module.exports = (access_token, userId, name, acronym, callback) => {
 
 function generatePlayers(teamId) {
     // Return an array of team members
-    for (var i = 0; i < 12; i++) {
+    for (var i = 0; i < config.generateTeamPlayerAmt; i++) {
         var player = genPlayer.createPlayer(teamId);
         // Runs async
         internalQuery('post', `/players`, {
