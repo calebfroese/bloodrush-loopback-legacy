@@ -10,7 +10,7 @@ module.exports = function (Email) {
         customEmail.signup(email, teamId, token => {
             // Save the token to the User
 
-            cb(null, token);
+            cb(null, null);
         })
     };
     Email.remoteMethod(
