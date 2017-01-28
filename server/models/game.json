@@ -1,0 +1,29 @@
+{
+  "name": "game",
+  "plural": "games",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": true
+    },
+    "home": {
+      "type": "string"
+    },
+    "away": {
+      "type": "string"
+    },
+    "number": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

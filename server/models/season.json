@@ -24,6 +24,11 @@
       "type": "belongsTo",
       "model": "league",
       "foreignKey": ""
+    },
+    "games": {
+      "type": "hasMany",
+      "model": "game",
+      "foreignKey": ""
     }
   },
   "acls": [],

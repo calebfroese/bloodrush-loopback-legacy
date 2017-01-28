@@ -79,5 +79,9 @@
         }
       }
     }
+  },
+  "game": {
+    "dataSource": "mongoDB",
+    "public": true
   }
 }

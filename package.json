@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
+    "watch": "nodemon .",
     "posttest": "npm run lint && nsp check"
   },
   "dependencies": {
@@ -31,7 +32,8 @@
   "devDependencies": {
     "eslint": "^2.13.1",
     "eslint-config-loopback": "^4.0.0",
-    "nsp": "^2.1.0"
+    "nsp": "^2.1.0",
+    "nodemon": "1.11.0"
   },
   "repository": {
     "type": "",
