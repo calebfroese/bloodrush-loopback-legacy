@@ -12,8 +12,6 @@ module.exports = {
         if (yearNow > 2017) {
             year = year + ' - ' + yearNow
         }
-
-
         // Find the team
         internalQuery('get', `/teams/${teamId}`, {}, team => {
             // Patch the team
