@@ -6,7 +6,8 @@ module.exports = function (Team) {
       */
     Team.generate = function (data, cb) {
         var customTeamGenerate = require('./../custom/team/generate.js');
-        customTeamGenerate(data.name, data.acronym, team => {
+        console.log('endpoint hit');
+        customTeamGenerate(data.access_token, data.userId, data.name, data.acronym, team => {
             cb(null, team);
         });
     };
@@ -19,13 +20,13 @@ module.exports = function (Team) {
             accepts: [
                 {
                     arg: 'data',
-                    type: 'json',
+                    type: 'object',
                     http: { source: 'body' },
                     required: true
                 }
             ],
             returns: {
-                arg: 'players',
+                arg: 'data',
                 type: 'string'
             }
         }
