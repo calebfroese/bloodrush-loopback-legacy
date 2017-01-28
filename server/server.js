@@ -47,11 +47,6 @@ app.post('/file/:teamId', upload.any(), (req, res) => {
             filename: file.filename
         }
     }));
-    // Save a note that the team has uploaded an image
-    // mongo.query('teams', 'uploadImg', { _id: req.params.teamId }, (response) => {
-    //     // Done
-        console.log('image uploaded and saved')
-    // });
 });
 
 // Serve images out of /public
