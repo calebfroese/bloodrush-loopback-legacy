@@ -15,6 +15,10 @@
       "type": "boolean",
       "required": true,
       "default": true
+    },
+    "ownerId": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],
