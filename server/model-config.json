@@ -67,5 +67,17 @@
         }
       }
     }
+  },
+  "image": {
+    "dataSource": "mongoDB",
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "createPart": true
+        }
+      }
+    }
   }
 }
