@@ -18,33 +18,33 @@ module.exports = {
         internalQuery('get', `/teams/${teamId}`, {}, team => {
             // Patch the team
             // callback(team)
-            var updatedTeam = team;
-            updatedTeam.token = token;
-            internalQuery('patch', `/teams/${teamId}`, updatedTeam, response => {
-                console.log(response);
+            // var team = team;
+            team.token = token;
+            internalQuery('patch', `/teams/${teamId}`, team, response => {
+                // Send the email
+                var params = {
+                    content: {
+                        template_id: 'signup',
+                        use_draft_template: false
+                    },
+                    recipients: [
+                        {
+                            address: {
+                                email: email
+                            }
+                        }
+                    ],
+                    substitution_data: {
+                        token: token,
+                        teamName: team.name,
+                        year: year
+                    }
+                }
+                client.transmissions.send(params);
                 callback(response);
             });
         });
 
-        // var params = {
-        //     content: {
-        //         template_id: 'signup',
-        //         use_draft_template: false
-        //     },
-        //     recipients: [
-        //         {
-        //             address: {
-        //                 email: email
-        //             }
-        //         }
-        //     ],
-        //     substitution_data: {
-        //         token: token,
-        //         teamId: teamId,
-        //         year: year
-        //     }
-        // }
-        // client.transmissions.send(params);
     }
 }
 
