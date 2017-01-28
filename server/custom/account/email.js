@@ -4,7 +4,7 @@ var client = new SparkPost(mailConfig.sparkpostApiKey);
 var internalQuery = require('./../internal-query.js');
 
 module.exports = {
-    signup: (email, teamName, callback) => {
+    signup: (email, teamId, callback) => {
         // Generate a token
         var token = makeid(12);
         var year = (new Date()).getFullYear();
@@ -13,29 +13,35 @@ module.exports = {
             year = year + ' - ' + yearNow
         }
 
-        var params = {
-            content: {
-                template_id: 'signup',
-                use_draft_template: false
-            },
-            recipients: [
-                {
-                    address: {
-                        email: email
-                    }
-                }
-            ],
-            substitution_data: {
-                token: token,
-                teamName: teamName,
-                year: year
-            }
-        }
-        client.transmissions.send(params);
-        // Save the token to the user
-        internalQuery('/teams', teams => {
-            callback(teams);
-        })
+
+        // Find the team
+        internalQuery.get(`/teams/${teamId}`, team => {
+            // Patch the team
+            team.verified = true;
+            internalQuery.patch(`/teams/${teamId}`, team => {
+                callback(team);
+            });
+        });
+
+        // var params = {
+        //     content: {
+        //         template_id: 'signup',
+        //         use_draft_template: false
+        //     },
+        //     recipients: [
+        //         {
+        //             address: {
+        //                 email: email
+        //             }
+        //         }
+        //     ],
+        //     substitution_data: {
+        //         token: token,
+        //         teamId: teamId,
+        //         year: year
+        //     }
+        // }
+        // client.transmissions.send(params);
     }
 }
 

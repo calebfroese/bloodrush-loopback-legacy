@@ -4,12 +4,12 @@ module.exports = function (Email) {
     /**
      * Send activation email
      */
-    Email.sendActivation = function (email, teamName, cb) {
+    Email.sendActivation = function (email, teamId, cb) {
         var customEmail = require('./../custom/account/email.js');
-        console.log(email, teamName);
-        customEmail.signup(email, teamName, token => {
+        console.log(email, teamId);
+        customEmail.signup(email, teamId, token => {
             // Save the token to the User
-            
+
             cb(null, token);
         })
     };
@@ -27,7 +27,7 @@ module.exports = function (Email) {
                     required: true
                 },
                 {
-                    arg: 'teamName',
+                    arg: 'teamId',
                     type: 'string',
                     http: { source: 'query' },
                     required: true
