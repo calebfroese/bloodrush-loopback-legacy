@@ -14,6 +14,11 @@
     "acronym": {
       "type": "string",
       "required": true
+    },
+    "verified": {
+      "type": "boolean",
+      "required": true,
+      "default": false
     }
   },
   "validations": [],

@@ -15,12 +15,15 @@ module.exports = {
 
 
         // Find the team
-        internalQuery('get', `/teams/${teamId}`, team => {
+        internalQuery('get', `/teams/${teamId}`, {}, team => {
             // Patch the team
-            // team.verified = true;
-            // internalQuery.patch(`/teams/${teamId}`, team => {
-                callback(team);
-            // });
+            // callback(team)
+            var newTeam = team;
+            newTeam.verified = true;
+            internalQuery('patch', `/teams/${teamId}`, newTeam, response => {
+                console.log(response);
+                callback(response);
+            });
         });
 
         // var params = {

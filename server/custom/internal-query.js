@@ -1,8 +1,16 @@
 var request = require('request');
 const apiURL = 'http://0.0.0.0:3000/api';
-module.exports = (method, path, callback) => {
-    console.log('Querying ', `${apiURL}${path}`)
-    request[method](`${apiURL}${path}`, (error, response, body) => {
+module.exports = (method, path, params, callback) => {
+    console.log(method, 'query on', `${apiURL}${path}`)
+    console.log(params);
+
+    var req = {
+        method: method,
+        uri: `${apiURL}${path}`,
+        json: true,
+        body: params
+    }
+    request(req, (error, response, body) => {
         //Check for error
         if (error) {
             return console.log('Error:', error);
@@ -13,6 +21,6 @@ module.exports = (method, path, callback) => {
             return console.log('Invalid Status Code Returned:', response.statusCode);
         }
 
-        callback(JSON.parse(body));
+        callback(body);
     });
 }
