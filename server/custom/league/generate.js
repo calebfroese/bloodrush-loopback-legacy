@@ -53,7 +53,7 @@ module.exports = (leagueId, callback) => {
             getSeasonNumber(leagueId)
                 .then(seasonNumber => {
                     // Generate playoffs
-                    var playoffGames = generatePlayoffs();
+                    var playoffGames = generatePlayoffs(leagueId, teams.length);
                     var allGames = regularGames.concat(playoffGames);
                     // Add season
                     console.log('about to update the season with the new number of ');
@@ -149,59 +149,68 @@ function getSeasonNumber(leagueId) {
     });
 }
 
-function generatePlayoffs(leagueId) {
+function generatePlayoffs(leagueId, teamCount) {
+    console.log('THERE ARE', teamCount, 'TEAMS IN THIS SEASON');
     var gamesArray = [];
 
     // Semi
-    roundNumber++;
-    nextGameDate = moment(nextGameDate).add(1, 'day');
-    for (var i = 0; i < 4; i++) {
-        var positions = [[1, 8], [4, 5], [3, 6], [2, 7]];
-        gamesArray.push({
-            'leagueId': leagueId,
-            'number': gameNumber,
-            'homeId': { 'name': positions[i][0] },
-            'awayId': { 'name': positions[i][1] },
-            'date': moment(nextGameDate).toDate(),
-            'round': roundNumber,
-            'tag': 'semi',
-            'data': {},
-            'qtr': [null, {}, {}, {}, {}]
-        });
-        gameNumber++;
+    if (teamCount >= 8) {
+        roundNumber++;
+        nextGameDate = moment(nextGameDate).add(1, 'day');
+        for (var i = 0; i < 4; i++) {
+            var positions = [[1, 8], [4, 5], [3, 6], [2, 7]];
+            gamesArray.push({
+                'leagueId': leagueId,
+                'number': gameNumber,
+                'homeId': { 'name': positions[i][0] },
+                'awayId': { 'name': positions[i][1] },
+                'date': moment(nextGameDate).toDate(),
+                'round': roundNumber,
+                'tag': 'semi',
+                'data': {},
+                'qtr': [null, {}, {}, {}, {}]
+            });
+            gameNumber++;
+        }
+        roundNumber++;
+        nextGameDate = moment(nextGameDate).add(1, 'day');
     }
-    roundNumber++;
-    nextGameDate = moment(nextGameDate).add(1, 'day');
+
     // Finals
-    for (var i = 0; i < 2; i++) {
-        var positions = [['semi0', 'semi1'], ['semi2', 'semi3']];
+    if (teamCount >= 4) {
+        for (var i = 0; i < 2; i++) {
+            var positions = [['semi0', 'semi1'], ['semi2', 'semi3']];
+            gamesArray.push({
+                'leagueId': leagueId,
+                'number': gameNumber,
+                'homeId': { 'name': positions[i][0] },
+                'awayId': { 'name': positions[i][1] },
+                'date': moment(nextGameDate).toDate(),
+                'round': roundNumber,
+                'tag': 'final',
+                'data': {},
+                'qtr': [null, {}, {}, {}, {}]
+            });
+            gameNumber++;
+        }
+        roundNumber++;
+        nextGameDate = moment(nextGameDate).add(1, 'day');
+    }
+
+    // Grand final
+    if (teamCount >= 2) {
         gamesArray.push({
             'leagueId': leagueId,
             'number': gameNumber,
-            'homeId': { 'name': positions[i][0] },
-            'awayId': { 'name': positions[i][1] },
+            'homeId': { 'name': 'final0' },
+            'awayId': { 'name': 'final1' },
             'date': moment(nextGameDate).toDate(),
             'round': roundNumber,
-            'tag': 'final',
+            'tag': 'grand',
             'data': {},
             'qtr': [null, {}, {}, {}, {}]
         });
-        gameNumber++;
     }
-    roundNumber++;
-    nextGameDate = moment(nextGameDate).add(1, 'day');
-    // Grand final
-    gamesArray.push({
-        'leagueId': leagueId,
-        'number': gameNumber,
-        'homeId': { 'name': 'final0' },
-        'awayId': { 'name': 'final1' },
-        'date': moment(nextGameDate).toDate(),
-        'round': roundNumber,
-        'tag': 'grand',
-        'data': {},
-        'qtr': [null, {}, {}, {}, {}]
-    });
-    gameNumber++;
+
     return gamesArray;
 }
