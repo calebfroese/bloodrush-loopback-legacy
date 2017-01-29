@@ -11,15 +11,18 @@
       "type": "object",
       "required": true
     },
-    "home": {
+    "homeId": {
       "type": "string"
     },
-    "away": {
+    "awayId": {
       "type": "string"
     },
     "number": {
       "type": "number",
       "required": true
+    },
+    "qtr": {
+      "type": "object"
     }
   },
   "validations": [],
