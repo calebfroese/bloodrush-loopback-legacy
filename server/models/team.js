@@ -31,4 +31,35 @@ module.exports = function (Team) {
             }
         }
     );
+
+    /**
+     * Fetching the score
+     */
+    Team.score = function (data, cb) {
+        var customTeamScore = require('./../custom/team/score.js');
+        console.log('endpoint hit');
+        customTeamScore(data.leagueId, data.seasonId, data.teamId, score => {
+            cb(null, score);
+        });
+    };
+    Team.remoteMethod(
+        'score', {
+            http: {
+                path: '/score',
+                verb: 'get'
+            },
+            accepts: [
+                {
+                    arg: 'data',
+                    type: 'object',
+                    http: { source: 'body' },
+                    required: true
+                }
+            ],
+            returns: {
+                arg: 'score',
+                type: 'object'
+            }
+        }
+    );
 };

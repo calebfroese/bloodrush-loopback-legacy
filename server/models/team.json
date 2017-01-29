@@ -31,7 +31,8 @@
     },
     "playerIdsAtPos": {
       "type": "array",
-      "default": []
+      "default": [],
+      "required": true
     }
   },
   "validations": [],

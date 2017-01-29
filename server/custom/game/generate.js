@@ -53,9 +53,10 @@ module.exports = {
 
                     // Fetch the players for each team
                     // HOME
-                    fetchPlayers(teams.home.id, teams.home.playerIdsAtPos).then(hp => {
+                    fetchPlayers(teams.home).then(hp => {
+                        console.log('home is', hp);
                         homePlayers = hp;
-                        fetchPlayers(teams.away.id, teams.away.playerIdsAtPos).then(ap => {
+                        fetchPlayers(teams.away).then(ap => {
                             awayPlayers = ap;
                             resolve(rollForPlayers(homePlayers, awayPlayers));
                         })
@@ -132,23 +133,49 @@ function fetchTeams(homeId, awayId) {
 /**
  * Plays a game
  */
-function fetchPlayers(teamId, playerIdsAtPos) {
-    return new Promise((resolve, reject) => {
-        internalQuery('get', `/teams/${teamId}/players`, {}, allPlayersArray => {
-            var players = [];
-            for (let i = 0; i < playerIdsAtPos.length; i++) {
-                allPlayersArray.forEach(player => {
-                    if (player.id === playerIdsAtPos[i]) {
-                        players[i] = player;
-                    }
-                });
-            }
-            setTimeout(() => {
-                console.log(players);
-                console.log('is the team players in order');
-                resolve(players);
-            }, 2500);
+function fetchPlayers(team) {
+    return getPlayerArray(team).then(playerIdsAtPos => {
+        console.log('using array of players', playerIdsAtPos)
+        return new Promise((resolve, reject) => {
+            internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
+                var players = [];
+                for (let i = 0; i < playerIdsAtPos.length; i++) {
+                    allPlayersArray.forEach(player => {
+                        if (player.id === playerIdsAtPos[i]) {
+                            players[i] = player;
+                        }
+                    });
+                }
+                setTimeout(() => {
+                    console.log(players);
+                    console.log('is the team players in order');
+                    resolve(players);
+                }, 2500);
+            });
         });
+    }).catch(err => {
+        console.error(err);
+        return Promise.reject();
+    });
+}
+
+function getPlayerArray(team) {
+    console.log('getPlayerArray')
+    // Resolves an array of ids to be used
+    return new Promise((resolve, reject) => {
+        if (team.playerIdsAtPos && team.playerIdsAtPos.length > 0) {
+            console.log('resolving with saved ids of', team.playerIdsAtPos)
+            resolve(playerIdsAtPos);
+        } else {
+            var playerIdsArray = [];
+            internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
+                allPlayersArray.forEach(p => {
+                    playerIdsArray.push(p.id);
+                })
+                console.log('resolving with default ids of', playerIdsArray)
+                resolve(playerIdsArray);
+            });
+        }
     });
 }
 
