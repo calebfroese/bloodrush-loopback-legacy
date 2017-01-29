@@ -153,6 +153,8 @@ function generatePlayoffs(leagueId) {
     var gamesArray = [];
 
     // Semi
+    roundNumber++;
+    nextGameDate = moment(nextGameDate).add(1, 'day');
     for (var i = 0; i < 4; i++) {
         var positions = [[1, 8], [4, 5], [3, 6], [2, 7]];
         gamesArray.push({
@@ -161,12 +163,15 @@ function generatePlayoffs(leagueId) {
             'homeId': { 'name': positions[i][0] },
             'awayId': { 'name': positions[i][1] },
             'date': moment(nextGameDate).toDate(),
-            'round': ('semi' + i),
+            'round': roundNumber,
+            'tag': 'semi',
             'data': {},
             'qtr': [null, {}, {}, {}, {}]
         });
         gameNumber++;
     }
+    roundNumber++;
+    nextGameDate = moment(nextGameDate).add(1, 'day');
     // Finals
     for (var i = 0; i < 2; i++) {
         var positions = [['semi0', 'semi1'], ['semi2', 'semi3']];
@@ -176,12 +181,14 @@ function generatePlayoffs(leagueId) {
             'homeId': { 'name': positions[i][0] },
             'awayId': { 'name': positions[i][1] },
             'date': moment(nextGameDate).toDate(),
-            'round': ('final' + i),
+            'round': roundNumber,
+            'tag': 'final',
             'data': {},
             'qtr': [null, {}, {}, {}, {}]
         });
         gameNumber++;
     }
+    roundNumber++;
     nextGameDate = moment(nextGameDate).add(1, 'day');
     // Grand final
     gamesArray.push({
@@ -190,7 +197,8 @@ function generatePlayoffs(leagueId) {
         'homeId': { 'name': 'final0' },
         'awayId': { 'name': 'final1' },
         'date': moment(nextGameDate).toDate(),
-        'round': ('grand'),
+        'round': roundNumber,
+        'tag': 'grand',
         'data': {},
         'qtr': [null, {}, {}, {}, {}]
     });
