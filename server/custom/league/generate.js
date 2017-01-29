@@ -4,15 +4,20 @@ var internalQuery = require('./../internal-query.js');
 const IDEAL_TOTAL_GAMES_PLAYED = 26; // season matcher will try to get close to this value of games played (therefore days)
 var nextGameDate = moment();
 var roundNumber = 1;
+var gameNumber = 1;
 
 module.exports = (leagueId, callback) => {
+    roundNumber = 1;
+    gameNumber = 1;
     if (!leagueId) callback(new Error('No league id'));
     console.log('generating season under league', leagueId)
     internalQuery('get', `/leagues/${leagueId}`, {}, league => {
-        internalQuery('get', `/leagues/${leagueId}/teams`, {}, teams => {
+        var arrstr = `"` + league.teamIds.join(`","`) + `"`;
+        internalQuery('get', `/teams?filter={"where": {"id": {"inq": [${arrstr}]}}}`, {}, teams => {
             // Now we have an array of the teams in teamsArray
             // Generate IDEAL_TOTAL_GAMES_PLAYED rounds
             if (teams.length < 2) {
+                console.log('Must have at least 2 players registered to a league to start a season');
                 callback('Must have at least 2 players registered to a league to start a season');
                 return;
             }
@@ -59,6 +64,7 @@ module.exports = (leagueId, callback) => {
                     }, createdSeason => {
                         // Save to the database
                         allGames.forEach(g => {
+                            console.log('Genearted season with the id of', createdSeason.id);
                             g.seasonId = createdSeason.id;
                             internalQuery('post', `/games`, g, () => { });
                         })
@@ -85,6 +91,7 @@ function createRounds(teams, leagueId) {
         for (var j = 0; j < teamCount / 2; j++) {
             gamesArray.push({
                 'leagueId': leagueId,
+                'number': gameNumber,
                 'homeId': teams[j].id,
                 'awayId': teams[teamCount - j - 1].id,
                 'date': moment(nextGameDate).toDate(),
@@ -92,6 +99,7 @@ function createRounds(teams, leagueId) {
                 'data': {},
                 'qtr': [null, {}, {}, {}, {}]
             });
+            gameNumber++;
         }
         // Move the arrays
         var first = teams[0];
@@ -149,6 +157,7 @@ function generatePlayoffs(leagueId) {
         var positions = [[1, 8], [4, 5], [3, 6], [2, 7]];
         gamesArray.push({
             'leagueId': leagueId,
+            'number': gameNumber,
             'homeId': { 'name': positions[i][0] },
             'awayId': { 'name': positions[i][1] },
             'date': moment(nextGameDate).toDate(),
@@ -156,12 +165,14 @@ function generatePlayoffs(leagueId) {
             'data': {},
             'qtr': [null, {}, {}, {}, {}]
         });
+        gameNumber++;
     }
     // Finals
     for (var i = 0; i < 2; i++) {
         var positions = [['semi0', 'semi1'], ['semi2', 'semi3']];
         gamesArray.push({
             'leagueId': leagueId,
+            'number': gameNumber,
             'homeId': { 'name': positions[i][0] },
             'awayId': { 'name': positions[i][1] },
             'date': moment(nextGameDate).toDate(),
@@ -169,11 +180,13 @@ function generatePlayoffs(leagueId) {
             'data': {},
             'qtr': [null, {}, {}, {}, {}]
         });
+        gameNumber++;
     }
     nextGameDate = moment(nextGameDate).add(1, 'day');
     // Grand final
     gamesArray.push({
         'leagueId': leagueId,
+        'number': gameNumber,
         'homeId': { 'name': 'final0' },
         'awayId': { 'name': 'final1' },
         'date': moment(nextGameDate).toDate(),
@@ -181,5 +194,6 @@ function generatePlayoffs(leagueId) {
         'data': {},
         'qtr': [null, {}, {}, {}, {}]
     });
+    gameNumber++;
     return gamesArray;
 }
