@@ -4,10 +4,10 @@ module.exports = function(Game) {
     /**
      * Generates and simulates a game
      */
-    Game.generate = function (seasonNumber, gameNumber, cb) {
-        console.log('Endpoint generating fgame ', seasonNumber, gameNumber)
+    Game.generate = function (gameId, cb) {
+        console.log('Endpoint generating fgame ', gameId)
         var customGameGenerate = require('./../custom/game/generate.js');
-        customGameGenerate.generate(seasonNumber, gameNumber, response => {
+        customGameGenerate.generate(gameId, response => {
             // Save the response to the User
             cb(null, response);
         })
@@ -20,14 +20,8 @@ module.exports = function(Game) {
             },
             accepts: [
                 {
-                    arg: 'seasonNumber',
-                    type: 'number',
-                    http: { source: 'query' },
-                    required: true
-                },
-                {
-                    arg: 'gameNumber',
-                    type: 'number',
+                    arg: 'gameId',
+                    type: 'string',
                     http: { source: 'query' },
                     required: true
                 }

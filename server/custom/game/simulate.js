@@ -1,19 +1,18 @@
-var MongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectID;
-var fs = require('fs');
-var mongo = require('./../../mongo/mongo.js');
+// var fs = require('fs');
+var internalQuery = require('./../internal-query.js');
+
 
 module.exports = {
-    simulate: (sId, gId) => {
-        console.log('Starting season', sId, 'game', gId);
+    simulate: (gId) => {
+        console.log('Starting game', gId);
         // Simulates an entire game so that player injury/death and score can be told
-        mongo.query('seasons', 'oneByNumber', { number: sId }, s => {
-            // Get teams
-            mongo.query('teams', 'oneById', { _id: s.games[gId].home }, h => {
+        internalQuery('get', `/games/${gId}`, {}, g => {
+            game = g;
+            internalQuery('get', `/teams/${g.homeId}`, {}, h => {
                 home = h;
-                mongo.query('teams', 'oneById', { _id: s.games[gId].away }, a => {
+                internalQuery('get', `/teams/${g.awayId}`, {}, a => {
                     away = a;
-                    ngOnInit(s, home, away, gId);
+                    ngOnInit();
                 });
             });
         });
@@ -22,8 +21,6 @@ module.exports = {
 
 // Params
 var gameId;
-var season;
-var seasonNumber;
 // Teams
 var home; // original unmodified team
 var away; // original unmodified team
@@ -49,14 +46,9 @@ var images = {};
 var maxWidth = 1152;
 var maxHeight = 822;
 
-function ngOnInit(seas, teamHome, teamAway, gId) {
-    // Fetch the season
-    season = seas;
-    gameId = gId;
-    seasonNumber = seas.number;
-    game = seas.games[gameId];
-    data = seas.games[gameId].data;
-    if (game && season.games[gameId].round && season.games[gameId].qtr[1].homePlayers) {
+function ngOnInit() {
+    data = game.data;
+    if (game && game.round && game.qtr[1].homePlayers) {
         pushData({ isLive: true, quarter: 1, homeScore: 0, awayScore: 0 });
         initializeGame();
     } else {
@@ -66,23 +58,14 @@ function ngOnInit(seas, teamHome, teamAway, gId) {
 
 function pushData(live) {
     // Update the game object
-    console.log('pushData');
-    MongoClient.connect('mongodb://localhost:27017/bloodrush', (err, db) => {
-        if (err) {
-            throw err
-            console.log('pushData:err');
-        }
-        console.log('game', gameId, 'quarter', live.quarter, '. home', home.name, 'vs', away.name);
-        var mySet = {};
-        mySet['games.' + gameId + '.data.live'] = live;
-
-        console.log('pushData:about to update');
-        db.collection('seasons').update({ number: seasonNumber }, { "$set": mySet }, { upsert: false, multi: false });
-        console.log('pushData:updated');
-        db.close();
-        console.log('pushData:closed');
+    var mySet = {};
+    mySet['games.' + gameId + '.data.live'] = live;
+    internalQuery('get', `/games/${game.id}`, {}, g => {
+        g.data.live = live;
+        internalQuery('patch', `/games/${game.id}`, g, () => {
+            console.log('pushed data')
+        });
     });
-    console.log('pushData:done');
 }
 
 function playerEvent(playerId) {
@@ -102,8 +85,8 @@ function initializeGame() {
 }
 
 function initializePlayers() {
-    data = season.games[gameId].data;
-    qtr = season.games[gameId].qtr;
+    data = game.data;
+    qtr = game.qtr;
     for (var i = 0; i < 8; i++) {
         for (var j = 1; j <= 4; j++) {
             if (qtr[j].homePlayers[i])
@@ -145,6 +128,7 @@ function checkRoundEnd() {
         // Data stuff
         if (qtrNum === 4 && !pushedQuarter4) {
             pushedQuarter4 = true;
+            console.log('GAME FINISHED');
             pushData({ isLive: false, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
         } else if (qtrNum > 0 && qtrNum < 4) {
             pushData({ isLive: true, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });

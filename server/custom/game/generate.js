@@ -9,10 +9,9 @@ const SUBS_PER_TEAM = 4;
 module.exports = {
     /**
      * Creates the game data for the specified game
-     * @param {number} seasonNumber
-     * @param {number} gameNumber
+     * @param {number} gameId
      */
-    generate: (seasonNumber, gameNumber, callback) => {
+    generate: (gameId, callback) => {
         // Fetch the game
         var home = null;
         var away = null;
@@ -35,7 +34,7 @@ module.exports = {
         var gameFound = null;
         var homePlayers = null;
         var awayPlayers = null;
-        fetchGame(seasonNumber, gameNumber)
+        fetchGame(gameId)
             .then(g => {
                 gameFound = g;
                 console.log('Game has been found', gameFound)
@@ -93,8 +92,7 @@ module.exports = {
                 // Patch the quarter with new data
                 patchQuarter(gameFound.id, 4, quarterData, { playerAttr: playerAttr, gameAttr: gameAttr })
                     .then(() => {
-                        console.log('ABOUT TO SIMULATE THE GAME!!!!!! UNCOMMENT THISSSS!!!')
-                        // childProcess.fork(`test.js`, [seasonNumber, gameNumber])
+                        childProcess.fork(`runGame.js`, [gameId])
                         callback({ ok: true });
                     })
             })
@@ -109,12 +107,10 @@ module.exports = {
 /**
  * Fetches a game depending on the game and season numbers
  */
-function fetchGame(seasonNumber, gameNumber) {
+function fetchGame(gameId) {
     return new Promise((resolve, reject) => {
-        internalQuery('get', `/seasons?filter={"number":${seasonNumber}}`, {}, seasons => {
-            internalQuery('get', `/games?filter={"seasonId":"${seasons[0].id}", "number":${gameNumber}}`, {}, games => {
-                resolve(games[0]);
-            });
+        internalQuery('get', `/games/${gameId}`, {}, game => {
+            resolve(game);
         });
     });
 }

@@ -23,6 +23,10 @@
     },
     "qtr": {
       "type": "object"
+    },
+    "round": {
+      "type": "number",
+      "required": true
     }
   },
   "validations": [],
