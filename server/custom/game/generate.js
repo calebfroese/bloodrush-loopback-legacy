@@ -53,9 +53,9 @@ module.exports = {
 
                     // Fetch the players for each team
                     // HOME
-                    fetchPlayers(gameFound.homeId).then(hp => {
+                    fetchPlayers(teams.home.id, teams.home.playerIdsAtPos).then(hp => {
                         homePlayers = hp;
-                        fetchPlayers(gameFound.awayId).then(ap => {
+                        fetchPlayers(teams.away.id, teams.away.playerIdsAtPos).then(ap => {
                             awayPlayers = ap;
                             resolve(rollForPlayers(homePlayers, awayPlayers));
                         })
@@ -132,10 +132,22 @@ function fetchTeams(homeId, awayId) {
 /**
  * Plays a game
  */
-function fetchPlayers(teamId) {
+function fetchPlayers(teamId, playerIdsAtPos) {
     return new Promise((resolve, reject) => {
-        internalQuery('get', `/teams/${teamId}/players`, {}, playersArray => {
-            resolve(playersArray);
+        internalQuery('get', `/teams/${teamId}/players`, {}, allPlayersArray => {
+            var players = [];
+            for (let i = 0; i < playerIdsAtPos.length; i++) {
+                allPlayersArray.forEach(player => {
+                    if (player.id === playerIdsAtPos[i]) {
+                        players[i] = player;
+                    }
+                });
+            }
+            setTimeout(() => {
+                console.log(players);
+                console.log('is the team players in order');
+                resolve(players);
+            }, 2500);
         });
     });
 }

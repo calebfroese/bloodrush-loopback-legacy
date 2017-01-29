@@ -28,6 +28,10 @@
     "hasImg": {
       "type": "boolean",
       "default": false
+    },
+    "playerIdsAtPos": {
+      "type": "array",
+      "default": []
     }
   },
   "validations": [],
