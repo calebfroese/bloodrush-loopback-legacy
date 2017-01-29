@@ -1,6 +1,7 @@
 var request = require('request');
 const apiURL = 'http://0.0.0.0:3000/api';
 module.exports = (method, path, params, callback) => {
+        console.log(method, path)
     var req = {
         method: method,
         uri: `${apiURL}${path}`,

@@ -34,7 +34,14 @@
   },
   "league": {
     "dataSource": "mongoDB",
-    "public": true
+    "public": true,
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "generateSeason": true
+        }
+      }
+    }
   },
   "season": {
     "dataSource": "mongoDB",

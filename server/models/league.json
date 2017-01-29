@@ -19,6 +19,10 @@
     "ownerId": {
       "type": "string",
       "required": true
+    },
+    "teamIds": {
+      "type": "array",
+      "default": []
     }
   },
   "validations": [],
@@ -26,11 +30,6 @@
     "seasons": {
       "type": "hasMany",
       "model": "season",
-      "foreignKey": ""
-    },
-    "teams": {
-      "type": "hasMany",
-      "model": "team",
       "foreignKey": ""
     }
   },
