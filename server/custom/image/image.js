@@ -51,6 +51,7 @@ module.exports = {
         });
         setTimeout(() => {
             createFrame(useTheseStyles, teamId, 7);
+            callback();
         }, 1000);
     },
     createPart: (style, teamId) => {
@@ -106,6 +107,7 @@ function createImg(style, rgba, fromUrl, toUrl) {
 }
 
 function joinImg(styles, teamId, framenumber) {
+    console.log('joinImg');
     if (!fs.existsSync(`temp/player/${teamId}/frame${framenumber}`)) {
         fs.mkdirSync(`temp/player/${teamId}/frame${framenumber}`);
     }

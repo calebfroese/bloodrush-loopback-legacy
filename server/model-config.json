@@ -82,7 +82,8 @@
       "remoting": {
         "sharedMethods": {
           "*": false,
-          "createPart": true
+          "createPart": true,
+          "createPlayers": true
         }
       }
     }
