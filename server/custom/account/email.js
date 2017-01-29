@@ -50,6 +50,7 @@ module.exports = {
             var team = teams[0];
             team.token = null;
             team.verified = true;
+            console.log('Verified the team', team.id);
             internalQuery('patch', `/teams/${team.id}`, team, response => {
                 callback(response)
             });
