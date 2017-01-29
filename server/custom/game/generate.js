@@ -54,7 +54,6 @@ module.exports = {
                     // Fetch the players for each team
                     // HOME
                     fetchPlayers(teams.home).then(hp => {
-                        console.log('home is', hp);
                         homePlayers = hp;
                         fetchPlayers(teams.away).then(ap => {
                             awayPlayers = ap;
@@ -139,7 +138,7 @@ function fetchPlayers(team) {
         return new Promise((resolve, reject) => {
             internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
                 var players = [];
-                for (let i = 0; i < playerIdsAtPos.length; i++) {
+                for (var i = 0; i < playerIdsAtPos.length; i++) {
                     allPlayersArray.forEach(player => {
                         if (player.id === playerIdsAtPos[i]) {
                             players[i] = player;
@@ -147,8 +146,6 @@ function fetchPlayers(team) {
                     });
                 }
                 setTimeout(() => {
-                    console.log(players);
-                    console.log('is the team players in order');
                     resolve(players);
                 }, 2500);
             });
@@ -164,15 +161,15 @@ function getPlayerArray(team) {
     // Resolves an array of ids to be used
     return new Promise((resolve, reject) => {
         if (team.playerIdsAtPos && team.playerIdsAtPos.length > 0) {
-            console.log('resolving with saved ids of', team.playerIdsAtPos)
             resolve(playerIdsAtPos);
         } else {
             var playerIdsArray = [];
             internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
                 allPlayersArray.forEach(p => {
-                    playerIdsArray.push(p.id);
+                    if (p && p.id) {
+                        playerIdsArray.push(p.id);
+                    }
                 })
-                console.log('resolving with default ids of', playerIdsArray)
                 resolve(playerIdsArray);
             });
         }
@@ -208,9 +205,19 @@ function rollForPlayers(homePlayersArray, awayPlayersArray) {
                 if (homePlayersArray[i]) hPlayers[i] = homePlayersArray[i];
                 if (awayPlayersArray[i]) aPlayers[i] = awayPlayersArray[i];
             } else {
-                if (homePlayersArray[i]) hSubPlayers[i] = homePlayersArray[i];
-                if (awayPlayersArray[i]) aSubPlayers[i] = awayPlayersArray[i];
+                if (homePlayersArray[i]) {
+                    hSubPlayers[i - 8] = homePlayersArray[i];
+                    console.log('adding home sub player!', i, hSubPlayers[i - 8].first)
+                }
+                if (awayPlayersArray[i]) {
+                    aSubPlayers[i - 8] = awayPlayersArray[i];
+                    console.log('adding away sub player!', i, aSubPlayers[i - 8].first)
+                }
             }
+        }
+
+        for (var i = 0; i < hSubPlayers.length; i++) {
+            console.log('home index', i, 'player', hSubPlayers[i].id)
         }
 
         // Calculate injury and death
@@ -223,6 +230,7 @@ function rollForPlayers(homePlayersArray, awayPlayersArray) {
         aPlayers = calculateInjury(aPlayers);
         hSubPlayers = calculateInjury(hSubPlayers);
         aSubPlayers = calculateInjury(aSubPlayers);
+
 
         resolve({ homePlayers: hPlayers.concat(hSubPlayers), awayPlayers: aPlayers.concat(aSubPlayers) });
     });
