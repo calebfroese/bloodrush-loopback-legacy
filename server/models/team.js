@@ -5,6 +5,7 @@ module.exports = function (Team) {
       * Send activation email
       */
     Team.generate = function (data, cb) {
+        console.log('data is', data);
         var customTeamGenerate = require('./../custom/team/generate.js');
         console.log('endpoint hit');
         customTeamGenerate(data.access_token, data.userId, data.name, data.acronym, team => {
@@ -35,10 +36,10 @@ module.exports = function (Team) {
     /**
      * Fetching the score
      */
-    Team.score = function (data, cb) {
+    Team.score = function (leagueId, seasonId, teamId, cb) {
         var customTeamScore = require('./../custom/team/score.js');
         console.log('endpoint hit');
-        customTeamScore(data.leagueId, data.seasonId, data.teamId, score => {
+        customTeamScore(leagueId, seasonId, teamId, score => {
             cb(null, score);
         });
     };
@@ -50,9 +51,21 @@ module.exports = function (Team) {
             },
             accepts: [
                 {
-                    arg: 'data',
-                    type: 'object',
-                    http: { source: 'body' },
+                    arg: 'leagueId',
+                    type: 'string',
+                    http: { source: 'query' },
+                    required: true
+                },
+                {
+                    arg: 'seasonId',
+                    type: 'string',
+                    http: { source: 'query' },
+                    required: true
+                },
+                {
+                    arg: 'teamId',
+                    type: 'string',
+                    http: { source: 'query' },
                     required: true
                 }
             ],

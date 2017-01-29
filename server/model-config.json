@@ -53,7 +53,8 @@
     "options": {
       "remoting": {
         "sharedMethods": {
-          "generate": true
+          "generate": true,
+          "score": true
         }
       }
     }
