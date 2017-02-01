@@ -133,14 +133,13 @@ function fetchTeams(homeId, awayId) {
  * Plays a game
  */
 function fetchPlayers(team) {
-    return getPlayerArray(team).then(playerIdsAtPos => {
-        console.log('using array of players', playerIdsAtPos)
+    return getPlayerArray(team).then(plyrIdsAtPos => {
         return new Promise((resolve, reject) => {
             internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
                 var players = [];
-                for (var i = 0; i < playerIdsAtPos.length; i++) {
+                for (var i = 0; i < plyrIdsAtPos.length; i++) {
                     allPlayersArray.forEach(player => {
-                        if (player.id === playerIdsAtPos[i]) {
+                        if (plyrIdsAtPos[i] && player.id === plyrIdsAtPos[i]) {
                             players[i] = player;
                         }
                     });
@@ -157,11 +156,10 @@ function fetchPlayers(team) {
 }
 
 function getPlayerArray(team) {
-    console.log('getPlayerArray')
     // Resolves an array of ids to be used
     return new Promise((resolve, reject) => {
         if (team.playerIdsAtPos && team.playerIdsAtPos.length > 0) {
-            resolve(playerIdsAtPos);
+            resolve(team.playerIdsAtPos);
         } else {
             var playerIdsArray = [];
             internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
