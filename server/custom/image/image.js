@@ -5,15 +5,20 @@ var jimp = require('jimp');
 
 module.exports = {
     createPlayers: (style, teamId, callback) => {
-        if (!fs.existsSync(`temp/player/${teamId}`)) {
+        if (fs.existsSync(`temp/player/${teamId}`))
             fs.mkdirSync(`temp/player/${teamId}`);
+        if (fs.existsSync(`temp/player/${teamId}/frame1`))
             fs.mkdirSync(`temp/player/${teamId}/frame1`);
+        if (fs.existsSync(`temp/player/${teamId}/frame1/preset`))
             fs.mkdirSync(`temp/player/${teamId}/frame1/preset`);
+        if (fs.existsSync(`temp/player/${teamId}/frame4`))
             fs.mkdirSync(`temp/player/${teamId}/frame4`);
+        if (fs.existsSync(`temp/player/${teamId}/frame4/preset`))
             fs.mkdirSync(`temp/player/${teamId}/frame4/preset`);
+        if (fs.existsSync(`temp/player/${teamId}/frame7`))
             fs.mkdirSync(`temp/player/${teamId}/frame7`);
+        if (fs.existsSync(`temp/player/${teamId}/frame7/preset`))
             fs.mkdirSync(`temp/player/${teamId}/frame7/preset`);
-        }
         // Frame 1
         var useTheseStyles = [];
         style.forEach(s => {
@@ -55,11 +60,6 @@ module.exports = {
         }, 1000);
     },
     createPart: (style, teamId) => {
-        if (!fs.existsSync(`public/temp/player/${teamId}`)) {
-            fs.mkdirSync(`public/temp/player/${teamId}`);
-            fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
-            fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
-        }
         createImg(style, style.color, `public/player/gen/frame1/${style.name}.png`, `public/temp/player/${teamId}/frame1/${style.name}-${style.color.r}.${style.color.g}.${style.color.b}.png`);
     }
 }
@@ -107,10 +107,6 @@ function createImg(style, rgba, fromUrl, toUrl) {
 }
 
 function joinImg(styles, teamId, framenumber) {
-    console.log('joinImg');
-    if (!fs.existsSync(`temp/player/${teamId}/frame${framenumber}`)) {
-        fs.mkdirSync(`temp/player/${teamId}/frame${framenumber}`);
-    }
     var base = images(`temp/player/${teamId}/frame${framenumber}/soles1.png`);
     styles.forEach(s => {
         base.draw(images(`temp/player/${teamId}/frame${framenumber}/${s.name}.png`), 0, 0)
