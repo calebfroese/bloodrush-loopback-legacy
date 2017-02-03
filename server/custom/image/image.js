@@ -5,19 +5,19 @@ var jimp = require('jimp');
 
 module.exports = {
     createPlayers: (style, teamId, callback) => {
-        if (fs.existsSync(`temp/player/${teamId}`))
+        if (!fs.existsSync(`temp/player/${teamId}`))
             fs.mkdirSync(`temp/player/${teamId}`);
-        if (fs.existsSync(`temp/player/${teamId}/frame1`))
+        if (!fs.existsSync(`temp/player/${teamId}/frame1`))
             fs.mkdirSync(`temp/player/${teamId}/frame1`);
-        if (fs.existsSync(`temp/player/${teamId}/frame1/preset`))
+        if (!fs.existsSync(`temp/player/${teamId}/frame1/preset`))
             fs.mkdirSync(`temp/player/${teamId}/frame1/preset`);
-        if (fs.existsSync(`temp/player/${teamId}/frame4`))
+        if (!fs.existsSync(`temp/player/${teamId}/frame4`))
             fs.mkdirSync(`temp/player/${teamId}/frame4`);
-        if (fs.existsSync(`temp/player/${teamId}/frame4/preset`))
+        if (!fs.existsSync(`temp/player/${teamId}/frame4/preset`))
             fs.mkdirSync(`temp/player/${teamId}/frame4/preset`);
-        if (fs.existsSync(`temp/player/${teamId}/frame7`))
+        if (!fs.existsSync(`temp/player/${teamId}/frame7`))
             fs.mkdirSync(`temp/player/${teamId}/frame7`);
-        if (fs.existsSync(`temp/player/${teamId}/frame7/preset`))
+        if (!fs.existsSync(`temp/player/${teamId}/frame7/preset`))
             fs.mkdirSync(`temp/player/${teamId}/frame7/preset`);
         // Frame 1
         var useTheseStyles = [];
