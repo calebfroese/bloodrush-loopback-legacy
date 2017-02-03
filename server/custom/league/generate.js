@@ -60,7 +60,8 @@ module.exports = (leagueId, callback) => {
 
                     internalQuery('post', `/seasons?leagueId=${leagueId}`, {
                         "number": seasonNumber,
-                        "leagueId": leagueId
+                        "leagueId": leagueId,
+                        "teamIds": league.teamIds
                     }, createdSeason => {
                         // Save to the database
                         allGames.forEach(g => {
