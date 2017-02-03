@@ -92,8 +92,8 @@ function createRounds(teams, leagueId) {
             gamesArray.push({
                 'leagueId': leagueId,
                 'number': gameNumber,
-                'homeId': teams[j].id,
-                'awayId': teams[teamCount - j - 1].id,
+                'homeId': teams[j] ? teams[j].id : null,
+                'awayId': teams[teamCount - j - 1] ? teams[teamCount - j - 1].id : null,
                 'date': moment(nextGameDate).toDate(),
                 'round': roundNumber,
                 'data': {},
