@@ -5,6 +5,7 @@ var jimp = require('jimp');
 
 module.exports = {
     createPlayers: (style, teamId, callback) => {
+        deleteFolderRecursive(`temp/player/${teamId}`);
         if (!fs.existsSync(`temp/player/${teamId}`))
             fs.mkdirSync(`temp/player/${teamId}`);
         if (!fs.existsSync(`temp/player/${teamId}/frame1`))
