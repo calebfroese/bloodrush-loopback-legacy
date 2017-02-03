@@ -5,21 +5,9 @@ var jimp = require('jimp');
 
 module.exports = {
     createPlayers: (style, teamId, callback) => {
-        deleteFolderRecursive(`temp/player/${teamId}`);
-        if (!fs.existsSync(`temp/player/${teamId}`))
-            fs.mkdirSync(`temp/player/${teamId}`);
-        if (!fs.existsSync(`temp/player/${teamId}/frame1`))
-            fs.mkdirSync(`temp/player/${teamId}/frame1`);
         if (!fs.existsSync(`temp/player/${teamId}/frame1/preset`))
-            fs.mkdirSync(`temp/player/${teamId}/frame1/preset`);
-        if (!fs.existsSync(`temp/player/${teamId}/frame4`))
-            fs.mkdirSync(`temp/player/${teamId}/frame4`);
-        if (!fs.existsSync(`temp/player/${teamId}/frame4/preset`))
-            fs.mkdirSync(`temp/player/${teamId}/frame4/preset`);
-        if (!fs.existsSync(`temp/player/${teamId}/frame7`))
-            fs.mkdirSync(`temp/player/${teamId}/frame7`);
-        if (!fs.existsSync(`temp/player/${teamId}/frame7/preset`))
-            fs.mkdirSync(`temp/player/${teamId}/frame7/preset`);
+            createPlayerFolders(teamId);
+
         // Frame 1
         var useTheseStyles = [];
         style.forEach(s => {
@@ -61,8 +49,36 @@ module.exports = {
         }, 1000);
     },
     createPart: (style, teamId) => {
-        createImg(style, style.color, `public/player/gen/frame1/${style.name}.png`, `public/temp/player/${teamId}/frame1/${style.name}-${style.color.r}.${style.color.g}.${style.color.b}.png`);
+        if (fs.existsSync(`public/temp/player/${teamId}/frame1/preset`)) {
+            // Does the public directorry for the user exist? If not create
+            createImg(style, style.color, `public/player/gen/frame1/${style.name}.png`, `public/temp/player/${teamId}/frame1/${style.name}-${style.color.r}.${style.color.g}.${style.color.b}.png`);
+        } else {
+            createPlayerFolders(teamId);
+            createImg(style, style.color, `public/player/gen/frame1/${style.name}.png`, `public/temp/player/${teamId}/frame1/${style.name}-${style.color.r}.${style.color.g}.${style.color.b}.png`);
+        }
     }
+}
+
+function createPlayerFolders(teamId) {
+    if (!fs.existsSync(`temp/player/${teamId}`))
+        deleteFolderRecursive(`temp/player/${teamId}`);
+    if (!fs.existsSync(`public/temp/player/${teamId}`))
+        deleteFolderRecursive(`public/temp/player/${teamId}`);
+    fs.mkdirSync(`temp/player/${teamId}`);
+    fs.mkdirSync(`temp/player/${teamId}/frame1`);
+    fs.mkdirSync(`temp/player/${teamId}/frame1/preset`);
+    fs.mkdirSync(`temp/player/${teamId}/frame4`);
+    fs.mkdirSync(`temp/player/${teamId}/frame4/preset`);
+    fs.mkdirSync(`temp/player/${teamId}/frame7`);
+    fs.mkdirSync(`temp/player/${teamId}/frame7/preset`);
+    fs.mkdirSync(`public/temp/player/${teamId}`);
+    fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
+    fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
+    fs.mkdirSync(`public/temp/player/${teamId}/frame4`);
+    fs.mkdirSync(`public/temp/player/${teamId}/frame4/preset`);
+    fs.mkdirSync(`public/temp/player/${teamId}/frame7`);
+    fs.mkdirSync(`public/temp/player/${teamId}/frame7/preset`);
+    console.log('player folders exist now');
 }
 
 function createFrame(useTheseStyles, teamId, framenum) {
