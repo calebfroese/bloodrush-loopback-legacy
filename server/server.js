@@ -72,7 +72,7 @@ nodeSchedule.scheduleJob('0 */5 */1 * * *', () => {
             var dayOfMonth = moment(game.date).day();
             var month = moment(game.date).month();
 
-            queueGame(game.id, moment().add(2, 'seconds').toDate())
+            queueGame(game.id, game.date)
         });
     });
 });
