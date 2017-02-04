@@ -12,9 +12,9 @@ module.exports = (playerId, teamId, callback) => {
               // The team has been charged by here
               player.teamId = purchasingTeam.id;
               player.state = 'ok';
-              internalQuery('post', `/players`, player, savedPlayer => {
-                internalQuery('delete', `/players/${playerId}`, {}, () => {});
-                callback()
+              internalQuery('delete', `/players/${playerId}`, {}, () => {
+                internalQuery(
+                    'post', `/players`, player, savedPlayer => {callback()});
               });
             });
       }
