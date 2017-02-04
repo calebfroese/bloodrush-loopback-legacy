@@ -37,7 +37,6 @@ module.exports = function (Game) {
      * Returns all games to be played today
      */
     Game.allOnDate = function (date, cb) {
-        console.log('endpoint hit');
         var allOnDate = require('./../custom/game/allOnDate.js');
         allOnDate(date, response => {
             cb(null, response);
@@ -47,13 +46,13 @@ module.exports = function (Game) {
         'allOnDate', {
             http: {
                 path: '/allOnDate',
-                verb: 'post'
+                verb: 'get'
             },
             accepts: [
                 {
                     arg: 'date',
-                    type: 'date',
-                    http: { source: 'body' },
+                    type: 'string',
+                    http: { source: 'query' },
                     required: true
                 }
             ],

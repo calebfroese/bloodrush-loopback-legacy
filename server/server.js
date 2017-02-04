@@ -62,7 +62,7 @@ nodeSchedule.scheduleJob('0 */5 */1 * * *', () => {
     console.log('Queing the games for today!');
     console.log('=--------------------------------------------=');
     // Found out all the games that need to be played today
-    internalQuery('post', `/games/allOnDate`, { date: new Date() }, res => {
+    internalQuery('get', `/games/allOnDate?date=${moment().format('YYYY/MM/DD')}`, {}, res => {
         let games = res.games;
         // Filter out byes
         games.forEach(game => {
