@@ -1,6 +1,6 @@
 var moment = require('moment');
 var internalQuery = require('./../internal-query.js');
-
+var logging = require('./../../logging.js');
 var gameQueue = require('./../game/queue.js');
 
 const IDEAL_TOTAL_GAMES_PLAYED = 26; // season matcher will try to get close to this value of games played (therefore days)
@@ -12,14 +12,14 @@ module.exports = (leagueId, callback) => {
     roundNumber = 1;
     gameNumber = 1;
     if (!leagueId) callback(new Error('No league id'));
-    console.log('generating season under league', leagueId)
+    logging.event('Generating a new season for league ' + leagueId);
     internalQuery('get', `/leagues/${leagueId}`, {}, league => {
         var arrstr = `"` + league.teamIds.join(`","`) + `"`;
         internalQuery('get', `/teams?filter={"where": {"id": {"inq": [${arrstr}]}}}`, {}, teams => {
             // Now we have an array of the teams in teamsArray
             // Generate IDEAL_TOTAL_GAMES_PLAYED rounds
             if (teams.length < 2) {
-                console.log('Must have at least 2 players registered to a league to start a season');
+                logging.warn('Unable to generate season for league ' + leagueId + '. Not enough teams enrolled.');
                 callback('Must have at least 2 players registered to a league to start a season');
                 return;
             }
@@ -58,7 +58,6 @@ module.exports = (leagueId, callback) => {
                     var playoffGames = generatePlayoffs(leagueId, teams.length);
                     var allGames = regularGames.concat(playoffGames);
                     // Add season
-                    console.log('about to update the season with the new number of ');
 
                     internalQuery('post', `/seasons?leagueId=${leagueId}`, {
                         "number": seasonNumber,
@@ -67,7 +66,7 @@ module.exports = (leagueId, callback) => {
                     }, createdSeason => {
                         // Save to the database
                         allGames.forEach(g => {
-                            console.log('Genearted season with the id of', createdSeason.id);
+                            logging.event('Season ' + createdSeason.id + ' generated for league ' + leagueId);
                             g.seasonId = createdSeason.id;
                             internalQuery('post', `/games`, g, () => { });
                         })
@@ -155,7 +154,6 @@ function getSeasonNumber(leagueId) {
 }
 
 function generatePlayoffs(leagueId, teamCount) {
-    console.log('THERE ARE', teamCount, 'TEAMS IN THIS SEASON');
     var gamesArray = [];
 
     // Semi

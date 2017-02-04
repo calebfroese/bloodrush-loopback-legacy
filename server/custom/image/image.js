@@ -45,6 +45,7 @@ module.exports = {
         });
         setTimeout(() => {
             createFrame(useTheseStyles, teamId, 7);
+            logging.info('Created player images for ' + teamId);
             callback();
         }, 1000);
     },
@@ -78,7 +79,6 @@ function createPlayerFolders(teamId) {
     fs.mkdirSync(`public/temp/player/${teamId}/frame4/preset`);
     fs.mkdirSync(`public/temp/player/${teamId}/frame7`);
     fs.mkdirSync(`public/temp/player/${teamId}/frame7/preset`);
-    console.log('player folders exist now');
 }
 
 function createFrame(useTheseStyles, teamId, framenum) {

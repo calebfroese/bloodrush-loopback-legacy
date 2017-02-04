@@ -1,9 +1,9 @@
 // var fs = require('fs');
 var internalQuery = require('./../internal-query.js');
+var logging = require('./../../logging.js');
 
 module.exports = {
     simulate: (gId) => {
-        console.log('Starting game', gId);
         // Simulates an entire game so that player injured/dead and score can be told
         internalQuery('get', `/games/${gId}`, {}, g => {
             game = g;
@@ -62,21 +62,13 @@ function pushData(live) {
     internalQuery('get', `/games/${game.id}`, {}, g => {
         g.data.live = live;
         internalQuery('patch', `/games/${game.id}`, g, () => {
-            console.log('pushed data')
+            // pushed data
         });
     });
 }
 
-function playerEvent(playerId) {
-    // MongoClient.connect('mongodb://localhost:27017/bloodrush', (err, db) => {
-    //     if (err) throw err
-    //     db.collection('teams').find({  }, (err, doc) => {
-    //         console.log(doc);
-    //     });
-    // });
-}
-
 function initializeGame() {
+    logging.event(gameId + ' has started');
     // This will start the game playing
     initializePlayers();
     checkRoundEnd();
@@ -127,7 +119,7 @@ function checkRoundEnd() {
         // Data stuff
         if (qtrNum === 4 && !pushedQuarter4) {
             pushedQuarter4 = true;
-            console.log('GAME FINISHED');
+            logging.event(gameId + ' has finished');
             pushData({ isLive: false, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
         } else if (qtrNum > 0 && qtrNum < 4) {
             pushData({ isLive: true, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
@@ -361,12 +353,10 @@ function replaceWithSub() {
 }
 
 function updatePlayerState(playerId, state) {
-    console.log('Fetching', playerId);
     internalQuery('get', `/players/${playerId}`, {}, player => {
-        console.log('FETCHING', playerId)
         player.state = state;
         internalQuery('patch', `/players/${player.id}`, player, p => {
-            console.log('UPDATED', playerId)
+            logging.event(p.id + ' is now ' + state);
         });
     });
 }

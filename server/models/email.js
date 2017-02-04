@@ -6,7 +6,6 @@ module.exports = function (Email) {
      */
     Email.sendActivation = function (email, teamId, cb) {
         var customEmail = require('./../custom/account/email.js');
-        console.log(email, teamId);
         customEmail.signup(email, teamId, token => {
             // Save the token to the User
             cb(null, null);
@@ -44,7 +43,6 @@ module.exports = function (Email) {
      */
     Email.verifyEmail = function (token, cb) {
         var customEmail = require('./../custom/account/email.js');
-        console.log(token);
         customEmail.verifyEmail(token, res => {
             // Update the user to verified
             

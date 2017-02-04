@@ -5,9 +5,7 @@ module.exports = function (Team) {
       * Send activation email
       */
     Team.generate = function (data, cb) {
-        console.log('data is', data);
         var customTeamGenerate = require('./../custom/team/generate.js');
-        console.log('endpoint hit');
         customTeamGenerate(data.access_token, data.userId, data.name, data.acronym, team => {
             cb(null, team);
         });
@@ -38,7 +36,6 @@ module.exports = function (Team) {
      */
     Team.score = function (leagueId, seasonId, teamId, cb) {
         var customTeamScore = require('./../custom/team/score.js');
-        console.log('endpoint hit');
         customTeamScore(leagueId, seasonId, teamId, score => {
             cb(null, score);
         });

@@ -19,7 +19,6 @@ module.exports = (date, callback) => {
         games.forEach(game => {
             var range = moment().range(today, todayEnd);
             if (range.contains(moment(game.date))) {
-                console.log('found game!');
                 gamesToday.push(game);
             }
         });

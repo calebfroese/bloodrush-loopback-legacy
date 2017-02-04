@@ -3,6 +3,8 @@
 var internalQuery = require('./../internal-query.js');
 var childProcess = require('child_process');
 
+var logging = require('./../../logging.js');
+
 const PLAYERS_PER_TEAM = 8;
 const SUBS_PER_TEAM = 4;
 
@@ -37,7 +39,6 @@ module.exports = {
         fetchGame(gameId)
             .then(g => {
                 gameFound = g;
-                console.log('Game has been found', gameFound)
                 return fetchTeams(gameFound.homeId, gameFound.awayId);
             })
             .then(teams => {
@@ -49,7 +50,7 @@ module.exports = {
                 return new Promise((resolve, reject) => {
                     home = [null, teams.home, teams.home, teams.home, teams.home];
                     away = [null, teams.away, teams.away, teams.away, teams.away];
-                    console.log('TEAMS FOUND', teams.home.name, 'vs', teams.away.name)
+                    logging.event('Attempting to generate game ' + gameId);
 
                     // Fetch the players for each team
                     // HOME
@@ -97,8 +98,7 @@ module.exports = {
                     })
             })
             .catch(err => {
-                console.log('ERROR');
-                console.log(err);
+                logging.error(err);
                 callback({ ok: false });
             })
     }
@@ -150,7 +150,7 @@ function fetchPlayers(team) {
             });
         });
     }).catch(err => {
-        console.error(err);
+        logging.error(err);
         return Promise.reject();
     });
 }
@@ -179,10 +179,6 @@ function patchQuarter(gameId, qtrNum, quarterData, data) {
         internalQuery('get', `/games/${gameId}`, {}, game => {
             game.qtr[qtrNum] = quarterData;
             game.data = data;
-            console.log((game.qtr['1'] !== null));
-            console.log((game.qtr['2'] !== null));
-            console.log((game.qtr['3'] !== null));
-            console.log((game.qtr['4'] !== null));
             internalQuery('patch', `/games/${gameId}`, game, patchedGame => {
                 resolve();
             });
@@ -205,17 +201,11 @@ function rollForPlayers(homePlayersArray, awayPlayersArray) {
             } else {
                 if (homePlayersArray[i]) {
                     hSubPlayers[i - 8] = homePlayersArray[i];
-                    console.log('adding home sub player!', i, hSubPlayers[i - 8].first)
                 }
                 if (awayPlayersArray[i]) {
                     aSubPlayers[i - 8] = awayPlayersArray[i];
-                    console.log('adding away sub player!', i, aSubPlayers[i - 8].first)
                 }
             }
-        }
-
-        for (var i = 0; i < hSubPlayers.length; i++) {
-            console.log('home index', i, 'player', hSubPlayers[i].id)
         }
 
         // Calculate injury and death

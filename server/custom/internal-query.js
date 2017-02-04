@@ -1,5 +1,6 @@
 var request = require('request');
 const apiURL = 'http://0.0.0.0:3000/api';
+var logging = require('./../logging.js');
 module.exports = (method, path, params, callback) => {
     var req = {
         method: method,
@@ -10,11 +11,13 @@ module.exports = (method, path, params, callback) => {
     request(req, (error, response, body) => {
         // Check for error
         if (error) {
-            return console.log('Error:', error);
+            logging.error(error);
+            return;
         }
         // Check for right status code
         if (response.statusCode !== 200) {
-            return console.log('Invalid Status Code Returned:', response.statusCode);
+            logging.error('Invalid Status Code Returned: ' + response.statusCode);
+            return;
         }
         callback(body);
     });

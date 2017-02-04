@@ -2,6 +2,7 @@ var mailConfig = require('./email.config.js');
 var SparkPost = require('sparkpost');
 var client = new SparkPost(mailConfig.sparkpostApiKey);
 var internalQuery = require('./../internal-query.js');
+var logging = require('./../../logging.js');
 
 module.exports = {
     signup: (email, teamId, callback) => {
@@ -39,6 +40,7 @@ module.exports = {
                     }
                 }
                 client.transmissions.send(params);
+                logging.event('Signup success. Verification email send to ' + team.id);
                 callback(response);
             });
         });
@@ -50,7 +52,7 @@ module.exports = {
             var team = teams[0];
             team.token = null;
             team.verified = true;
-            console.log('Verified the team', team.id);
+            logging.event('Verified team ' + team.id);
             internalQuery('patch', `/teams/${team.id}`, team, response => {
                 callback(response)
             });
