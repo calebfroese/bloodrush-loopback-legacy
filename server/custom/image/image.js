@@ -2,6 +2,7 @@ var fs = require('fs');
 var images = require('images');
 var PNG = require('pngjs').PNG;
 var jimp = require('jimp');
+var logging = require('./../../logging.js');
 
 module.exports = {
     createPlayers: (style, teamId, callback) => {
