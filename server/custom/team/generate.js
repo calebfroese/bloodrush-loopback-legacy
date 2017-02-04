@@ -7,7 +7,7 @@ var genPlayer = require('./../player/generate.js');
 
 module.exports = (access_token, userId, name, acronym, callback) => {
     // Generare and save a team object
-    logging.event('Unable to generate season for league ' + leagueId + '. Not enough teams enrolled.');
+    logging.info('Generating a team from user' + userId + ' called ' + name);
     internalQuery('post', `/teams`, {
         "name": name,
         "acronym": acronym,
@@ -19,7 +19,7 @@ module.exports = (access_token, userId, name, acronym, callback) => {
         // Save the team to the player
         internalQuery('get', `/Users/${userId}?access_token=${access_token}`, {}, user => {
             user.teamId = team.id;
-            logging.event('Created team ' + team.name + ' with id of ' + team.id);
+            logging.info('Created team ' + team.name + ' with id of ' + team.id);
             internalQuery('patch', `/Users/${userId}?access_token=${access_token}`, user, updatedUser => {
                 callback(updatedUser);
             });
@@ -42,7 +42,8 @@ function generatePlayers(teamId) {
             "spd": player.spd,
             "kg": player.kg,
             "rec": player.rec,
-            "teamId": teamId
+            "teamId": teamId,
+            "state": "ok"
         }, player => { });
     }
 }

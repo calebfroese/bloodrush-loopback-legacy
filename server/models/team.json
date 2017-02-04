@@ -32,6 +32,11 @@
     "playerIdsAtPos": {
       "type": "array",
       "default": []
+    },
+    "money": {
+      "type": "number",
+      "default": 0,
+      "required": true
     }
   },
   "validations": [],

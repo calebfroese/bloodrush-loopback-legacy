@@ -1,6 +1,7 @@
 // var fs = require('fs');
 var internalQuery = require('./../internal-query.js');
 var logging = require('./../../logging.js');
+var economyConsts = require('./../../config/economy.constants.js');
 
 module.exports = {
     simulate: (gId) => {
@@ -119,7 +120,7 @@ function checkRoundEnd() {
         // Data stuff
         if (qtrNum === 4 && !pushedQuarter4) {
             pushedQuarter4 = true;
-            logging.event(gameId + ' has finished');
+            giveMoney();
             pushData({ isLive: false, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
         } else if (qtrNum > 0 && qtrNum < 4) {
             pushData({ isLive: true, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
@@ -359,4 +360,30 @@ function updatePlayerState(playerId, state) {
             logging.event(p.id + ' is now ' + state);
         });
     });
+}
+
+function giveMoney() {
+    // This will allocate money to the teams after the game
+    // Figure out who won
+    var win = 'tie';
+    if (this.homeScore > this.awayScore) {
+        var win = 'home';
+    } else {
+        var win = 'away';
+    }
+
+    internalQuery('get', `/teams/${home.id}`, {}, homeTeam => {
+        var homePrize = (win === 'tie') ? economyConsts.GAME_TIE : (win === 'home' ? economyConsts.GAME_WIN : economyConsts.GAME_LOSE);
+        homeTeam.money = homeTeam.money + homePrize;
+        internalQuery('patch', `/teams/${home.id}`, {}, homeTeam => {
+            logging.info(home.id + ' awarded ' + homePrize + ' for result of win: ' + win);
+        })
+    })
+    internalQuery('get', `/teams/${away.id}`, {}, awayTeam => {
+        var awayPrize = (win === 'tie') ? economyConsts.GAME_TIE : (win === 'away' ? economyConsts.GAME_WIN : economyConsts.GAME_LOSE);
+        awayTeam.money = awayTeam.money + awayPrize;
+        internalQuery('patch', `/teams/${away.id}`, {}, awayTeam => {
+            logging.info(away.id + ' awarded ' + awayPrize + ' for result of win: ' + win);
+        })
+    })
 }
