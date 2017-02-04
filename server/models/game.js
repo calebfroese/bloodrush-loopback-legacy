@@ -53,7 +53,7 @@ module.exports = function (Game) {
                     arg: 'date',
                     type: 'string',
                     http: { source: 'query' },
-                    required: true
+                    required: false
                 }
             ],
             returns: {

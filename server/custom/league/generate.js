@@ -1,6 +1,8 @@
 var moment = require('moment');
 var internalQuery = require('./../internal-query.js');
 
+var gameQueue = require('./../game/queue.js');
+
 const IDEAL_TOTAL_GAMES_PLAYED = 26; // season matcher will try to get close to this value of games played (therefore days)
 var nextGameDate = moment().add(10, 'minutes');
 var roundNumber = 1;
@@ -69,6 +71,8 @@ module.exports = (leagueId, callback) => {
                             g.seasonId = createdSeason.id;
                             internalQuery('post', `/games`, g, () => { });
                         })
+                        // Update the queued games
+                        gameQueue.updateTodaysQueue();
                     });
                 });
         });

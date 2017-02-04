@@ -8,8 +8,9 @@ var moment = require('moment');
 var multer = require('multer');
 var path = require('path');
 var cors = require('cors');
-var nodeSchedule = require('node-schedule');
+
 var internalQuery = require('./custom/internal-query.js');
+var gameQueue = require('./custom/game/queue.js');
 
 app.start = function () {
     // start the web server
@@ -51,33 +52,11 @@ app.post('/file/:teamId', upload.any(), (req, res) => {
     }));
 });
 
+// Load the initial queued games
+gameQueue.updateTodaysQueue();
+
 // Serve images out of /public
 app.use(loopback.static(__dirname + '/public'));
-
-
-
-// Game
-nodeSchedule.scheduleJob('0 */5 */1 * * *', () => {
-    console.log('=--------------------------------------------=');
-    console.log('Queing the games for today!');
-    console.log('=--------------------------------------------=');
-    // Found out all the games that need to be played today
-    internalQuery('get', `/games/allOnDate?date=${moment().format('YYYY/MM/DD')}`, {}, res => {
-        let games = res.games;
-        // Filter out byes
-        games.forEach(game => {
-            // Valid game to be ran today! Set it to run at its time
-            var min = moment(game.date).minute();
-            var hr = moment(game.date).hour();
-            var dayOfMonth = moment(game.date).day();
-            var month = moment(game.date).month();
-
-            queueGame(game.id, game.date)
-        });
-    });
-});
-
-
 
 // Bootstrap the application, configure models, datasources and middleware.
 // Sub-apps like REST API are mounted via boot scripts.
@@ -88,13 +67,3 @@ boot(app, __dirname, function (err) {
     if (require.main === module)
         app.start();
 });
-
-function queueGame(gameId, date) {
-    nodeSchedule.scheduleJob(date, function (gId) {
-        var generate = require('./custom/game/generate.js');
-        generate.generate(gId, () => {
-            console.log('Generated game', gId);
-        })
-    }.bind(null, gameId));
-}
-console.log(nodeSchedule.scheduledJobs);
