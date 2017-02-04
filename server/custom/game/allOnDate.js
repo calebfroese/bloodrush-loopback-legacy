@@ -6,7 +6,7 @@ var moment = MomentRange.extendMoment(Moment);
  * Fetches all the games on a certain date to be generated and simulated
  */
 module.exports = (date, callback) => {
-    if (date) {
+    if (date && date !== {} && date !== "{}") {
     var today = moment(date).startOf('day');
     var todayEnd = moment(date).endOf('day');
     } else {

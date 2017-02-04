@@ -1,6 +1,7 @@
 var nodeSchedule = require('node-schedule');
 var moment = require('moment');
 
+var generate = require('./generate.js');
 var logging = require('./../../logging.js');
 var internalQuery = require('./../internal-query.js');
 
@@ -28,7 +29,6 @@ module.exports = {
 
 function queueGame(gameId, date) {
     nodeSchedule.scheduleJob(date, function (gId) {
-        var generate = require('./custom/game/generate.js');
         generate.generate(gId, () => {
             logging.event('Generated game ' + gId);
         })
