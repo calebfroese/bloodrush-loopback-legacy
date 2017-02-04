@@ -374,16 +374,16 @@ function giveMoney() {
 
     internalQuery('get', `/teams/${home.id}`, {}, homeTeam => {
         var homePrize = (win === 'tie') ? economyConsts.GAME_TIE : (win === 'home' ? economyConsts.GAME_WIN : economyConsts.GAME_LOSE);
-        homeTeam.money = homeTeam.money + homePrize;
-        internalQuery('patch', `/teams/${home.id}`, {}, homeTeam => {
-            logging.info(home.id + ' awarded ' + homePrize + ' for result of win: ' + win);
+        homeTeam.money = (homeTeam.money) ? (homeTeam.money + homePrize) : homePrize;
+        internalQuery('patch', `/teams/${home.id}`, homeTeam, savedTeam => {
+            logging.info(home.id + ' awarded ' + homePrize + ' for result of win: ' + win + '. Total: $' + savedTeam.money);
         })
     })
     internalQuery('get', `/teams/${away.id}`, {}, awayTeam => {
         var awayPrize = (win === 'tie') ? economyConsts.GAME_TIE : (win === 'away' ? economyConsts.GAME_WIN : economyConsts.GAME_LOSE);
-        awayTeam.money = awayTeam.money + awayPrize;
-        internalQuery('patch', `/teams/${away.id}`, {}, awayTeam => {
-            logging.info(away.id + ' awarded ' + awayPrize + ' for result of win: ' + win);
+        awayTeam.money = (awayTeam.money) ? (awayTeam.money + awayPrize) : awayPrize;
+        internalQuery('patch', `/teams/${away.id}`, awayTeam, savedTeam => {
+            logging.info(away.id + ' awarded ' + awayPrize + ' for result of win: ' + win + '. Total: $' + savedTeam.money);
         })
     })
 }

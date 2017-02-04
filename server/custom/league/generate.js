@@ -4,13 +4,14 @@ var logging = require('./../../logging.js');
 var gameQueue = require('./../game/queue.js');
 
 const IDEAL_TOTAL_GAMES_PLAYED = 26; // season matcher will try to get close to this value of games played (therefore days)
-var nextGameDate = moment().add(1, 'minutes');
+var nextGameDate = moment();
 var roundNumber = 1;
 var gameNumber = 1;
 
 module.exports = (leagueId, callback) => {
     roundNumber = 1;
     gameNumber = 1;
+    nextGameDate = moment().add(1, 'minutes');
     if (!leagueId) callback(new Error('No league id'));
     logging.event('Generating a new season for league ' + leagueId);
     internalQuery('get', `/leagues/${leagueId}`, {}, league => {
