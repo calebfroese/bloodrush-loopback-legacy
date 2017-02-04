@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(Game) {
+module.exports = function (Game) {
     /**
      * Generates and simulates a game
      */
@@ -29,6 +29,37 @@ module.exports = function(Game) {
             returns: {
                 arg: 'response',
                 type: 'string'
+            }
+        }
+    );
+
+    /**
+     * Returns all games to be played today
+     */
+    Game.allOnDate = function (date, cb) {
+        console.log('endpoint hit');
+        var allOnDate = require('./../custom/game/allOnDate.js');
+        allOnDate(date, response => {
+            cb(null, response);
+        })
+    };
+    Game.remoteMethod(
+        'allOnDate', {
+            http: {
+                path: '/allOnDate',
+                verb: 'post'
+            },
+            accepts: [
+                {
+                    arg: 'date',
+                    type: 'date',
+                    http: { source: 'body' },
+                    required: true
+                }
+            ],
+            returns: {
+                arg: 'games',
+                type: 'any'
             }
         }
     );
