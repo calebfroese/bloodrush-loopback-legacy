@@ -55,9 +55,9 @@ module.exports = {
                     // Fetch the players for each team
                     // HOME
                     fetchPlayers(teams.home).then(hp => {
-                        homePlayers = hp;
+                        homePlayers = removeNotOkPlayers(hp);
                         fetchPlayers(teams.away).then(ap => {
-                            awayPlayers = ap;
+                            awayPlayers = removeNotOkPlayers(ap);
                             resolve(rollForPlayers(homePlayers, awayPlayers));
                         })
                     })
@@ -272,4 +272,18 @@ function calculateUpset(players) {
         }
     }
     return players;
+}
+
+/**
+ * Makes sure that only players who are in the
+ * ok state will play
+ */
+function removeNotOkPlayers(players) {
+    var ok = [];
+    players.forEach(p => {
+        if (p.state === 'ok') {
+            ok.push(p);
+        }
+    });
+    return ok;
 }
