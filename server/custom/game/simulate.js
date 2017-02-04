@@ -120,8 +120,9 @@ function checkRoundEnd() {
         // Data stuff
         if (qtrNum === 4 && !pushedQuarter4) {
             pushedQuarter4 = true;
-            giveMoney();
             pushData({ isLive: false, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
+            logging.info('Finished game ' + gameId);
+            giveMoney();
         } else if (qtrNum > 0 && qtrNum < 4) {
             pushData({ isLive: true, quarter: qtrNum, homeScore: homeScore, awayScore: awayScore });
         }
