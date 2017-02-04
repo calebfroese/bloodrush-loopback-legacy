@@ -250,10 +250,10 @@ function calculateInjury(players) {
                 // Death rate
                 if (5 - players[i].rec * 0.1 > chance) {
                     // Recieve death
-                    players[i].knockdown = 'death';
+                    players[i].knockdown = 'dead';
                 } else {
                     // Recieve injury
-                    players[i].knockdown = 'injury';
+                    players[i].knockdown = 'injured';
                 }
             } else {
                 // Calculate if they will recover

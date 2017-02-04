@@ -39,6 +39,11 @@
       "type": "number",
       "required": true,
       "default": 50
+    },
+    "state": {
+      "type": "string",
+      "required": true,
+      "default": "ok"
     }
   },
   "validations": [],

@@ -1,11 +1,10 @@
 // var fs = require('fs');
 var internalQuery = require('./../internal-query.js');
 
-
 module.exports = {
     simulate: (gId) => {
         console.log('Starting game', gId);
-        // Simulates an entire game so that player injury/death and score can be told
+        // Simulates an entire game so that player injured/dead and score can be told
         internalQuery('get', `/games/${gId}`, {}, g => {
             game = g;
             internalQuery('get', `/teams/${g.homeId}`, {}, h => {
@@ -297,9 +296,11 @@ function calculateRecovery(team, playerIndex) {
                 homePlayers[playerIndex].down = false;
                 homePlayers[playerIndex].kg = homePlayers[playerIndex].def / 6; // give hp back
             }, recoveryTime);
-        } else if (homePlayers[playerIndex].knockdown === 'injury') {
+        } else if (homePlayers[playerIndex].knockdown === 'injured') {
+            updatePlayerState(homePlayers[playerIndex].id, 'injured');
             qtrDeadInjArray.home.push(playerIndex)
-        } else if (homePlayers[playerIndex].knockdown === 'death') {
+        } else if (homePlayers[playerIndex].knockdown === 'dead') {
+            updatePlayerState(homePlayers[playerIndex].id, 'dead');
             qtrDeadInjArray.home.push(playerIndex)
         }
         homePlayers[playerIndex].knockdown = 'knockdown';
@@ -310,9 +311,11 @@ function calculateRecovery(team, playerIndex) {
                 awayPlayers[playerIndex].down = false;
                 awayPlayers[playerIndex].kg = awayPlayers[playerIndex].def / 6; // give hp back
             }, recoveryTime);
-        } else if (awayPlayers[playerIndex].knockdown === 'injury') {
+        } else if (awayPlayers[playerIndex].knockdown === 'injured') {
+            updatePlayerState(awayPlayers[playerIndex].id, 'injured');
             qtrDeadInjArray.away.push(playerIndex)
-        } else if (awayPlayers[playerIndex].knockdown === 'death') {
+        } else if (awayPlayers[playerIndex].knockdown === 'dead') {
+            updatePlayerState(awayPlayers[playerIndex].id, 'dead');
             qtrDeadInjArray.away.push(playerIndex)
         }
         awayPlayers[playerIndex].knockdown = 'knockdown';
@@ -354,5 +357,16 @@ function replaceWithSub() {
             }
         }
     }
-    qtrDeadInjArray = { home: [], away: [] };
+    this.qtrDeadInjArray = { home: [], away: [] };
+}
+
+function updatePlayerState(playerId, state) {
+    console.log('Fetching', playerId);
+    internalQuery('get', `/players/${playerId}`, {}, player => {
+        console.log('FETCHING', playerId)
+        player.state = state;
+        internalQuery('patch', `/players/${player.id}`, player, p => {
+            console.log('UPDATED', playerId)
+        });
+    });
 }
