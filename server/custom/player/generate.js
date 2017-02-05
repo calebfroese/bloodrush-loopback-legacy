@@ -17,13 +17,13 @@ createPlayer() {
   player.last = faker.name.lastName();
   player.country = genCountry();
   // Speed / Weight
-  player.spd = genNumber(30, 100) + luck / 6;
-  player.kg = genNumber(60, 140);
+  player.spd = Math.floor(genNumber(30, 100) + luck / 4);
+  player.kg = Math.floor(genNumber(80, 120));
   // Atk / Def
-  player.atk = genNumber(30, 100) + luck / 6;
-  player.def = genNumber(30, 100) + luck / 6;
+  player.atk = Math.floor(genNumber(30, 100) + luck / 4);
+  player.def = Math.floor(genNumber(30, 100) + luck / 4);
   // Recovery rate
-  player.rec = genNumber(0, 30);
+  player.rec = Math.floor(genNumber(0, 30));
   return player;
 }
 
