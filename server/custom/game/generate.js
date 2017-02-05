@@ -3,6 +3,7 @@
 var internalQuery = require('./../internal-query.js');
 var childProcess = require('child_process');
 
+var gameConsts = require('./../../config/game.constants.js');
 var logging = require('./../../logging.js');
 
 const PLAYERS_PER_TEAM = 8;
@@ -236,9 +237,9 @@ function calculateInjury(players) {
             players[i].knockdown = 'knockdown';
             var chance = Math.random() * 100;
             // Injury rate
-            if (17 - players[i].rec * 0.1 > chance) {
+            if (gameConsts.INJURY_RATE >= chance) {
                 // Death rate
-                if (5 - players[i].rec * 0.1 > chance) {
+                if (gameConsts.DEATH_RATE >= chance) {
                     // Recieve death
                     players[i].knockdown = 'dead';
                 } else {
