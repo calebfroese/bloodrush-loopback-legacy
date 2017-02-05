@@ -22,6 +22,7 @@ module.exports = {
   }
 }
 
+var gameFinished = false
 // Params
 var gameId;
 // Teams
@@ -143,6 +144,7 @@ function newRound() {
 
 var pushedQuarter4 = false;
 function checkRoundEnd() {
+  if (gameFinished) return;
   if (timeCurrent >= timeNextRound || !timeNextRound) {
     // Data stuff
     if (qtrNum === 4 && !pushedQuarter4) {
@@ -154,6 +156,7 @@ function checkRoundEnd() {
         awayScore: awayScore
       });
       logging.info('Finished game ' + game.id);
+      gameFinished = true;
       giveMoney();
     } else if (qtrNum > 0 && qtrNum < 4) {
       pushData({
@@ -211,6 +214,7 @@ function redrawCanvas() {
 }
 
 function playerLogic(playerPos, team, i) {
+  if (gameFinished) return playerPos;
   /**
    * Calculates the player logic
    * @param {x, y, r} playerPos
