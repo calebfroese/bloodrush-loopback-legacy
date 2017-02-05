@@ -44,6 +44,9 @@
       "type": "string",
       "required": true,
       "default": "ok"
+    },
+    "country": {
+      "type": "string"
     }
   },
   "validations": [],

@@ -26,9 +26,6 @@ app.start = function () {
     });
 };
 
-
-
-
 // Image uploading
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
