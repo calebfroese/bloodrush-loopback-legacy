@@ -17,13 +17,11 @@ createPlayer() {
   player.last = faker.name.lastName();
   player.country = genCountry();
   // Speed / Weight
-  var weightSpeedObj = genWeight(luck);
-  player.spd = weightSpeedObj.spd;
-  player.kg = weightSpeedObj.kg;
+  player.spd = genNumber(30, 100) + luck / 6;
+  player.kg = genNumber(60, 140);
   // Atk / Def
-  var atkDefObj = genAtkDef(luck);
-  player.atk = atkDefObj.atk;
-  player.def = atkDefObj.def;
+  player.atk = genNumber(30, 100) + luck / 6;
+  player.def = genNumber(30, 100) + luck / 6;
   // Recovery rate
   player.rec = genNumber(0, 30);
   return player;
@@ -81,28 +79,4 @@ genLuck() {
     luck = genNumber(85, 100);
   }
   return luck
-}
-
-function genWeight(luck) {
-  var luckElement = genNumber(0, luck) / 4;
-
-  var spd = genNumber(50, 100);
-  var kgRatio = 1 - (spd - 50) / 50;
-  var kgLowest = 60 + (kgRatio * genNumber(10, 30));
-  var kgHighest = kgLowest + 10 + (kgRatio * genNumber(30, 100));
-  var kg = genNumber(kgLowest, kgHighest);
-  return {
-    spd: Math.floor(spd + luckElement), kg: Math.floor(kg + luckElement)
-  }
-}
-
-function genAtkDef(luck) {
-  var luckElement = genNumber(0, luck) / 3;
-
-  var atk = genNumber(50, 100);
-  var atkRatio = 1 - (atk - 50) / 50;
-  var def = 50 + genNumber(50 * atkRatio, 100 * atkRatio);
-  return {
-    atk: Math.floor(atk + luckElement), def: Math.floor(def + luckElement)
-  }
 }
