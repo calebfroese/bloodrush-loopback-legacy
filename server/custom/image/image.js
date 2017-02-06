@@ -78,10 +78,10 @@ module.exports =
 
 function createPlayerFolders(teamId) {
   // Make sure permafolders are there
-  if (!fs.mkdirSync(`temp`)) fs.mkdirSync(`temp`);
-  if (!fs.mkdirSync(`temp/player`)) fs.mkdirSync(`temp/player`);
-  if (!fs.mkdirSync(`public/temp`)) fs.mkdirSync(`public/temp`);
-  if (!fs.mkdirSync(`public/temp/player`)) fs.mkdirSync(`public/temp/player`);
+  if (!fs.existsSync(`temp`)) fs.mkdirSync(`temp`);
+  if (!fs.existsSync(`temp/player`)) fs.mkdirSync(`temp/player`);
+  if (!fs.existsSync(`public/temp`)) fs.mkdirSync(`public/temp`);
+  if (!fs.existsSync(`public/temp/player`)) fs.mkdirSync(`public/temp/player`);
 
   deleteFolderRecursive(`temp/player/${teamId}`);
   deleteFolderRecursive(`public/temp/player/${teamId}`);
