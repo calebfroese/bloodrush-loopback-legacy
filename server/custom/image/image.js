@@ -52,12 +52,12 @@ module.exports =
                 `temp/player/${teamId}/frame7/${s.name}.png`);
           }
         });
-        setTimeout(() => {
+        setTimeout(function (callback) {
           createFrame(useTheseStyles, teamId, 7, () => {
             callback({ok: true});
           });
           logging.info('Created player images for ' + teamId);
-        }, WAIT_BEFORE_JOIN_IMG);
+        }.bind(callback), WAIT_BEFORE_JOIN_IMG);
       },
       createPart: (style, teamId) => {
         if (fs.existsSync(`public/temp/player/${teamId}/frame1/preset`)) {
