@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "start": "node .",
+    "prod": "nodemon .",
     "watch": "nodemon .",
     "posttest": "npm run lint && nsp check"
   },
