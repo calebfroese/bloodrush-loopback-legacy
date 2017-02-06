@@ -52,12 +52,12 @@ module.exports =
                 `temp/player/${teamId}/frame7/${s.name}.png`);
           }
         });
-        setTimeout(function (callback) {
-          createFrame(useTheseStyles, teamId, 7, () => {
-            callback({ok: true});
+        setTimeout(() => {
+          createFrame(useTheseStyles, teamId, 7, x => {
+            callback(x);
           });
           logging.info('Created player images for ' + teamId);
-        }.bind(callback), WAIT_BEFORE_JOIN_IMG);
+        }, WAIT_BEFORE_JOIN_IMG);
       },
       createPart: (style, teamId) => {
         if (fs.existsSync(`public/temp/player/${teamId}/frame1/preset`)) {
@@ -104,9 +104,11 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`public/temp/player/${teamId}/frame7/preset`);
 }
 
-function createFrame(useTheseStyles, teamId, framenum, callback) {
+function createFrame(useTheseStyles, teamId, framenum, cb) {
   setTimeout(() => {
-    joinImg(useTheseStyles, teamId, framenum, callback);
+    joinImg(useTheseStyles, teamId, framenum, x => {
+      cb(x);
+    });
   }, 300);
 }
 
@@ -146,7 +148,7 @@ function createImg(style, rgba, fromUrl, toUrl) {
   }
 }
 
-function joinImg(styles, teamId, framenumber, callback) {
+function joinImg(styles, teamId, framenumber, cb) {
   var base = images(`temp/player/${teamId}/frame${framenumber}/soles1.png`);
   styles.forEach(
       s => {base.draw(
@@ -170,7 +172,8 @@ function joinImg(styles, teamId, framenumber, callback) {
     deleteFolderRecursive(`temp/player/${teamId}`);
     if (fs.existsSync(`temp/player/${teamId}`)) {
       fs.rmdirSync(`temp/player/${teamId}`);
-      callback({ok: true});
+      console.log('calling back');
+      cb({ok: true});
     }
   }, 200);
 }
