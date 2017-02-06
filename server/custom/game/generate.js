@@ -94,7 +94,8 @@ module.exports = {
                 // Patch the quarter with new data
                 patchQuarter(gameFound.id, 4, quarterData, { playerAttr: playerAttr, gameAttr: gameAttr })
                     .then(() => {
-                        childProcess.fork(`runGame.js`, [gameId])
+                        logging.event('Generated game ' + gameId + ' successfully');
+                        childProcess.fork(`runGame.js`, [gameId]);
                         callback({ ok: true });
                     })
             })

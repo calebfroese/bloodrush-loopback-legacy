@@ -53,9 +53,10 @@ module.exports =
           }
         });
         setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 7);
+          createFrame(useTheseStyles, teamId, 7, () => {
+            callback({ok: true});
+          });
           logging.info('Created player images for ' + teamId);
-          callback();
         }, WAIT_BEFORE_JOIN_IMG);
       },
       createPart: (style, teamId) => {
@@ -103,9 +104,9 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`public/temp/player/${teamId}/frame7/preset`);
 }
 
-function createFrame(useTheseStyles, teamId, framenum) {
+function createFrame(useTheseStyles, teamId, framenum, callback) {
   setTimeout(() => {
-    joinImg(useTheseStyles, teamId, framenum);
+    joinImg(useTheseStyles, teamId, framenum, callback);
   }, 300);
 }
 
@@ -145,7 +146,7 @@ function createImg(style, rgba, fromUrl, toUrl) {
   }
 }
 
-function joinImg(styles, teamId, framenumber) {
+function joinImg(styles, teamId, framenumber, callback) {
   var base = images(`temp/player/${teamId}/frame${framenumber}/soles1.png`);
   styles.forEach(
       s => {base.draw(
@@ -169,6 +170,7 @@ function joinImg(styles, teamId, framenumber) {
     deleteFolderRecursive(`temp/player/${teamId}`);
     if (fs.existsSync(`temp/player/${teamId}`)) {
       fs.rmdirSync(`temp/player/${teamId}`);
+      callback({ok: true});
     }
   }, 200);
 }
