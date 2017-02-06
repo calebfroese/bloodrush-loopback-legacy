@@ -77,6 +77,12 @@ module.exports =
     }
 
 function createPlayerFolders(teamId) {
+  // Make sure permafolders are there
+  if (!fs.mkdirSync(`temp`)) fs.mkdirSync(`temp`);
+  if (!fs.mkdirSync(`temp/player`)) fs.mkdirSync(`temp/player`);
+  if (!fs.mkdirSync(`public/temp`)) fs.mkdirSync(`public/temp`);
+  if (!fs.mkdirSync(`public/temp/player`)) fs.mkdirSync(`public/temp/player`);
+
   deleteFolderRecursive(`temp/player/${teamId}`);
   deleteFolderRecursive(`public/temp/player/${teamId}`);
   fs.mkdirSync(`temp/player/${teamId}`);
@@ -139,10 +145,10 @@ function createImg(style, rgba, fromUrl, toUrl) {
 
 function joinImg(styles, teamId, framenumber) {
   var base = images(`temp/player/${teamId}/frame${framenumber}/soles1.png`);
-  styles.forEach(s => {
-    base.draw(
-        images(`temp/player/${teamId}/frame${framenumber}/${s.name}.png`), 0, 0)
-  })
+  styles.forEach(
+      s => {base.draw(
+          images(`temp/player/${teamId}/frame${framenumber}/${s.name}.png`), 0,
+          0)})
   base.save(
       `public/player/output/${teamId}-${framenumber}.png`, {quality: 100});
   setTimeout(() => {
