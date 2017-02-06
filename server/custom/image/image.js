@@ -82,6 +82,8 @@ function createPlayerFolders(teamId) {
   if (!fs.existsSync(`temp/player`)) fs.mkdirSync(`temp/player`);
   if (!fs.existsSync(`public/temp`)) fs.mkdirSync(`public/temp`);
   if (!fs.existsSync(`public/temp/player`)) fs.mkdirSync(`public/temp/player`);
+  if (!fs.existsSync(`public/player`)) fs.mkdirSync(`public/player`);
+  if (!fs.existsSync(`public/player/output`)) fs.mkdirSync(`public/player/output`);
 
   deleteFolderRecursive(`temp/player/${teamId}`);
   deleteFolderRecursive(`public/temp/player/${teamId}`);
