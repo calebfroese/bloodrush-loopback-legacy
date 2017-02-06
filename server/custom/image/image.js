@@ -4,6 +4,8 @@ var PNG = require('pngjs').PNG;
 var jimp = require('jimp');
 var logging = require('./../../logging.js');
 
+const WAIT_BEFORE_JOIN_IMG = 3000;
+
 module.exports =
     {
       createPlayers: (style, teamId, callback) => {
@@ -23,7 +25,7 @@ module.exports =
         });
         setTimeout(() => {
           createFrame(useTheseStyles, teamId, 1);
-        }, 3000);
+        }, WAIT_BEFORE_JOIN_IMG);
 
         // Frame 4
         var useTheseStyles = [];
@@ -38,7 +40,7 @@ module.exports =
         });
         setTimeout(() => {
           createFrame(useTheseStyles, teamId, 4);
-        }, 3000);
+        }, WAIT_BEFORE_JOIN_IMG);
 
         // Frame 7
         var useTheseStyles = [];
@@ -55,7 +57,7 @@ module.exports =
           createFrame(useTheseStyles, teamId, 7);
           logging.info('Created player images for ' + teamId);
           callback();
-        }, 3000);
+        }, WAIT_BEFORE_JOIN_IMG);
       },
       createPart: (style, teamId) => {
         if (fs.existsSync(`public/temp/player/${teamId}/frame1/preset`)) {
