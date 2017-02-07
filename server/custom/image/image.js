@@ -23,7 +23,7 @@ module.exports =
           }
         });
         setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 1);
+          createFrame(useTheseStyles, teamId, 'frame1');
         }, WAIT_BEFORE_JOIN_IMG);
 
         // Frame 4
@@ -38,7 +38,7 @@ module.exports =
           }
         });
         setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 4);
+          createFrame(useTheseStyles, teamId, 'frame4');
         }, WAIT_BEFORE_JOIN_IMG);
 
         // Frame 7
@@ -53,10 +53,41 @@ module.exports =
           }
         });
         setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 7, x => {
+          createFrame(useTheseStyles, teamId, 'frame7');
+        }, WAIT_BEFORE_JOIN_IMG);
+
+        // Attack 1
+        var useTheseStyles = [];
+        style.forEach(s => {
+          // For each part
+          if (s.selected || s.base) {
+            useTheseStyles.push(s);
+            createImg(
+                s, s.color, `public/player/gen/attack1/${s.name}.png`,
+                `temp/player/${teamId}/attack1/${s.name}.png`);
+          }
+        });
+        setTimeout(() => {
+          createFrame(useTheseStyles, teamId, 'attack1', x => {
             callback(x);
           });
-          logging.info('Created player images for ' + teamId);
+        }, WAIT_BEFORE_JOIN_IMG);
+
+        // Attack 2
+        var useTheseStyles = [];
+        style.forEach(s => {
+          // For each part
+          if (s.selected || s.base) {
+            useTheseStyles.push(s);
+            createImg(
+                s, s.color, `public/player/gen/attack2/${s.name}.png`,
+                `temp/player/${teamId}/attack2/${s.name}.png`);
+          }
+        });
+        setTimeout(() => {
+          createFrame(useTheseStyles, teamId, 'attack2', x => {
+            callback(x);
+          });
         }, WAIT_BEFORE_JOIN_IMG);
       },
       createPart: (style, teamId) => {
@@ -95,6 +126,10 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`temp/player/${teamId}/frame4/preset`);
   fs.mkdirSync(`temp/player/${teamId}/frame7`);
   fs.mkdirSync(`temp/player/${teamId}/frame7/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/attack1`);
+  fs.mkdirSync(`temp/player/${teamId}/attack1/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/attack2`);
+  fs.mkdirSync(`temp/player/${teamId}/attack2/preset`);
   fs.mkdirSync(`public/temp/player/${teamId}`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
@@ -102,11 +137,15 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`public/temp/player/${teamId}/frame4/preset`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame7`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame7/preset`);
+  fs.mkdirSync(`public/temp/player/${teamId}/attack1`);
+  fs.mkdirSync(`public/temp/player/${teamId}/attack1/preset`);
+  fs.mkdirSync(`public/temp/player/${teamId}/attack2`);
+  fs.mkdirSync(`public/temp/player/${teamId}/attack2/preset`);
 }
 
-function createFrame(useTheseStyles, teamId, framenum, cb) {
+function createFrame(useTheseStyles, teamId, frameName, cb) {
   setTimeout(() => {
-    joinImg(useTheseStyles, teamId, framenum, x => {
+    joinImg(useTheseStyles, teamId, frameName, x => {
       cb(x);
     });
   }, 300);
@@ -148,25 +187,25 @@ function createImg(style, rgba, fromUrl, toUrl) {
   }
 }
 
-function joinImg(styles, teamId, framenumber, cb) {
-  var base = images(`temp/player/${teamId}/frame${framenumber}/soles1.png`);
+function joinImg(styles, teamId, frameName, cb) {
+  var base = images(`temp/player/${teamId}/${frameName}/soles1.png`);
   styles.forEach(
       s => {base.draw(
-          images(`temp/player/${teamId}/frame${framenumber}/${s.name}.png`), 0,
+          images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0,
           0)})
   base.save(
-      `public/player/output/${teamId}-${framenumber}.png`, {quality: 100});
+      `public/player/output/${teamId}-${frameName}.png`, {quality: 100});
   setTimeout(() => {
     // Finished saving by now
     jimp.read(
-        `public/player/output/${teamId}-${framenumber}.png`,
+        `public/player/output/${teamId}-${frameName}.png`,
         function(err, image) {
           if (err) {
             console.error(err);
             return;
           }
           image.flip(true, false)
-              .write(`public/player/output/${teamId}-${framenumber}r.png`);
+              .write(`public/player/output/${teamId}-${frameName}r.png`);
         });
     // Delete temporary folders
     deleteFolderRecursive(`temp/player/${teamId}`);
