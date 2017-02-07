@@ -1,4 +1,5 @@
 'use strict';
+var emailConfig = require('./../custom/account/email.config.js');
 
 module.exports = function (Email) {
     /**
@@ -66,6 +67,44 @@ module.exports = function (Email) {
             returns: {
                 arg: 'token',
                 type: 'string'
+            }
+        }
+    );
+
+    /**
+     * Adds a user to the mailing list
+     */
+    Email.addToMailingList = function (email, list, cb) {
+        console.log('email is', email);
+        var customEmail = require('./../custom/account/email.js');
+        var listId = (list === 'updates') ? emailConfig.mailingListIds.updates : emailConfig.mailingListIds.newsletter;
+        customEmail.addToMailingList(email, listId, res => {
+            cb(res);
+        })
+    };
+    Email.remoteMethod(
+        'addToMailingList', {
+            http: {
+                path: '/addToMailingList',
+                verb: 'post'
+            },
+            accepts: [
+                {
+                    arg: 'email',
+                    type: 'string',
+                    http: { source: 'query' },
+                    required: true
+                },
+                {
+                    arg: 'list',
+                    type: 'string',
+                    http: { source: 'query' },
+                    required: true
+                }
+            ],
+            returns: {
+                arg: 'response',
+                type: 'object'
             }
         }
     );

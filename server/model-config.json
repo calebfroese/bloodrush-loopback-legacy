@@ -71,7 +71,8 @@
         "sharedMethods": {
           "*": false,
           "sendActivation": true,
-          "verifyEmail": true
+          "verifyEmail": true,
+          "addToMailingList": true
         }
       }
     }
