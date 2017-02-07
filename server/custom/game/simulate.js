@@ -57,7 +57,7 @@ function ngOnInit() {
   data = game.data;
   if (game && game.round && game.qtr[1].homePlayers) {
     pushData({isLive: true, quarter: 1, homeScore: 0, awayScore: 0});
-    initializeGame();
+    initializeGame(game.id);
   } else {
     console.error('GAME HAS NOT YET BEEN RAN!!! ERR');
   }
@@ -77,7 +77,7 @@ function pushData(live) {
   });
 }
 
-function initializeGame() {
+function initializeGame(gameId) {
   logging.event(gameId + ' has started');
   // This will start the game playing
   initializePlayers();

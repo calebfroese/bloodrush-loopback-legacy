@@ -22,8 +22,8 @@ module.exports = {
             x: 280 * 0.35,
             y: 430 * 0.35,
             playerYSpacing: 1.54, // the y coordinate spacing between players
-            visionRadius: 100,
-            attackRadius: 30,
+            visionRadius: 110,
+            attackRadius: 50,
             recoveryTime: 7000, // in seconds
         };
         var gameAttr = {
