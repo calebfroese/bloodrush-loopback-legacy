@@ -89,6 +89,23 @@ module.exports =
             callback(x);
           });
         }, WAIT_BEFORE_JOIN_IMG);
+
+        // Attack 3
+        var useTheseStyles = [];
+        style.forEach(s => {
+          // For each part
+          if (s.selected || s.base) {
+            useTheseStyles.push(s);
+            createImg(
+                s, s.color, `public/player/gen/attack3/${s.name}.png`,
+                `temp/player/${teamId}/attack3/${s.name}.png`);
+          }
+        });
+        setTimeout(() => {
+          createFrame(useTheseStyles, teamId, 'attack3', x => {
+            callback(x);
+          });
+        }, WAIT_BEFORE_JOIN_IMG);
       },
       createPart: (style, teamId) => {
         if (fs.existsSync(`public/temp/player/${teamId}/frame1/preset`)) {
@@ -130,6 +147,8 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`temp/player/${teamId}/attack1/preset`);
   fs.mkdirSync(`temp/player/${teamId}/attack2`);
   fs.mkdirSync(`temp/player/${teamId}/attack2/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/attack3`);
+  fs.mkdirSync(`temp/player/${teamId}/attack3/preset`);
   fs.mkdirSync(`public/temp/player/${teamId}`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
@@ -141,6 +160,8 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`public/temp/player/${teamId}/attack1/preset`);
   fs.mkdirSync(`public/temp/player/${teamId}/attack2`);
   fs.mkdirSync(`public/temp/player/${teamId}/attack2/preset`);
+  fs.mkdirSync(`public/temp/player/${teamId}/attack3`);
+  fs.mkdirSync(`public/temp/player/${teamId}/attack3/preset`);
 }
 
 function createFrame(useTheseStyles, teamId, frameName, cb) {
