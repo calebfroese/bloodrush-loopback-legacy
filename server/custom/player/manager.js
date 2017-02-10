@@ -13,17 +13,18 @@ module.exports =
 
         // nodeSchedule.scheduleJob('* */1 * * *', () => {
         logging.info('Player manager assigning players');
-        findPlayer({where: {state: 'ok'}})
-            .then(injured => {
-              injured.map(player => {
+        findPlayer({where: {state: {inq: ['injured', 'market', 'training']}}})
+            .then(players => {
+              players.map(player => {
                 if (stateEnded(player)) {
-                  // The player is no longer injured
+                  // The player is no longer in a temp state
+                  var oldState = player.state;
                   player.state = 'ok';
                   player.stateEnds = undefined;
                   internalQuery(
                       'patch', `/players/${player.id}`, player, () => {
                         logging.info(`Player ${player.first} ${player
-                                         .last} is no longer ${player.state}`);
+                                         .last} is no longer ${oldState}`);
                       })
                 }
               });
@@ -39,7 +40,8 @@ module.exports =
 function findPlayer(query) {
   return new Promise((resolve, reject) => {
     internalQuery(
-        'get', `/players?filter=${JSON.stringify(query)}`, {}, players => {resolve(players)});
+        'get', `/players?filter=${JSON.stringify(query)}`, {},
+        players => {resolve(players)});
   });
 }
 
