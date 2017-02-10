@@ -314,6 +314,15 @@ function removeNotOkPlayers(players) {
       players[i] = null;
     }
   }
-  console.log(players);
-  return players;
+  return clean(players);
+}
+
+function clean(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == undefined || arr[i] == null) {
+      arr.splice(i, 1);
+      i--;
+    }
+  }
+  return arr;
 }

@@ -7,5 +7,6 @@ module.exports = {
         SECOND: 250,
         THIRD: 150
     },
-    PLAYER_SELL_DEFAULT: 20
+    PLAYER_SELL_DEFAULT: 20,
+    MARKET_DEFAULT_PLAYER_AMT: 15
 }

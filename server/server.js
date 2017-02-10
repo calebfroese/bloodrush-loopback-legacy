@@ -13,6 +13,7 @@ var logging = require('./logging.js');
 var internalQuery = require('./custom/internal-query.js');
 var gameQueue = require('./custom/game/queue.js');
 var playerManager = require('./custom/player/manager.js');
+var marketManager = require('./custom/market/manager.js');
 
 app.start = function () {
     // start the web server
@@ -56,6 +57,9 @@ gameQueue.updateTodaysQueue();
 
 // Manage injury and training
 playerManager.init();
+
+// Manage default market players
+marketManager.init();
 
 // Serve images out of /public
 app.use(loopback.static(__dirname + '/public'));

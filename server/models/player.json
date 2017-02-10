@@ -51,6 +51,9 @@
     },
     "stateEnds": {
       "type": "date"
+    },
+    "askingPrice": {
+      "type": "number"
     }
   },
   "validations": [],
