@@ -513,14 +513,17 @@ function playerInjury(player) {
   var severity = Math.random() * 100;
   if (severity < 40) {
     // Minor injury (0-2 days)
+    logging.info(`${player.id} suffered a minor injury`);
     player.stateEnds = moment().add(Math.floor(Math.random() * 42), 'hours');
     return removeStats(player, 20);
   } else if (severity > 40 && severity < 80) {
     // Moderate injury (1-3 days)
+    logging.info(`${player.id} suffered a moderate injury`);
     player.stateEnds = moment().add(Math.floor(24 + Math.random() * 42), 'hours');
     return removeStats(player, 40);
   } else {
     // Major injury (2-5 days)
+    logging.info(`${player.id} suffered a major injury`);
     player.stateEnds = moment().add(Math.floor(42 + Math.random() * 120), 'hours');
     return removeStats(player, 60);
   }
@@ -530,4 +533,5 @@ function removeStats(player, multiplier) {
   player.atk -= Math.floor(Math.random() * multiplier);
   player.def -= Math.floor(Math.random() * multiplier);
   player.spd -= Math.floor(Math.random() * multiplier);
+  return player;
 }
