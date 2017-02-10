@@ -11,8 +11,8 @@ module.exports =
         // Initializes the queue for the first time
         logging.info('Initializing the player manager');
 
-        // nodeSchedule.scheduleJob('* */1 * * *', () => {
-        logging.info('Player manager assigning players');
+        nodeSchedule.scheduleJob('* */1 * * *', () => {
+        logging.info('Player manager is managing states');
         findPlayer({where: {state: {inq: ['injured', 'market', 'training']}}})
             .then(players => {
               players.map(player => {
@@ -33,7 +33,7 @@ module.exports =
               logging.error('Error in player manager:');
               console.error(err);
             })
-        // });
+        });
       }
     }
 

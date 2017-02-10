@@ -1,4 +1,5 @@
-// var fs = require('fs');
+var moment = require('moment');
+
 var internalQuery = require('./../internal-query.js');
 var logging = require('./../../logging.js');
 var economyConsts = require('./../../config/economy.constants.js');
@@ -428,9 +429,18 @@ function replaceWithSub() {
   this.qtrDeadInjArray = {home: [], away: []};
 }
 
+/**
+ *
+ * ADDITIONAL SERVERSIDE FUNCTIONS
+ *
+ */
+
 function updatePlayerState(playerId, state, teamId) {
   internalQuery('get', `/players/${playerId}`, {}, player => {
     player.state = state;
+    if (state === 'injured') {
+      player = playerInjury(player);
+    }
     internalQuery('patch', `/players/${player.id}`, player, p => {
       shouldGivePlayer(state, teamId);
       logging.event(p.id + ' is now ' + state);
@@ -496,4 +506,28 @@ function givePlayer(teamId) {
     logging.info(
         'Gave team ' + teamId + ' a new player (' + newPlayer.id + ')');
   });
+}
+
+function playerInjury(player) {
+  // How bad is the injury? in %
+  var severity = Math.random() * 100;
+  if (severity < 40) {
+    // Minor injury (0-2 days)
+    player.stateEnds = moment().add(Math.floor(Math.random() * 42), 'hours');
+    return removeStats(player, 20);
+  } else if (severity > 40 && severity < 80) {
+    // Moderate injury (1-3 days)
+    player.stateEnds = moment().add(Math.floor(24 + Math.random() * 42), 'hours');
+    return removeStats(player, 40);
+  } else {
+    // Major injury (2-5 days)
+    player.stateEnds = moment().add(Math.floor(42 + Math.random() * 120), 'hours');
+    return removeStats(player, 60);
+  }
+}
+
+function removeStats(player, multiplier) {
+  player.atk -= Math.floor(Math.random() * multiplier);
+  player.def -= Math.floor(Math.random() * multiplier);
+  player.spd -= Math.floor(Math.random() * multiplier);
 }
