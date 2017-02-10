@@ -439,7 +439,9 @@ function updatePlayerState(playerId, state, teamId) {
   internalQuery('get', `/players/${playerId}`, {}, player => {
     player.state = state;
     if (state === 'injured') {
+      console.log(player.id, 'inj');
       player = playerInjury(player);
+      console.log(player.id, 'inj2');
     }
     internalQuery('patch', `/players/${player.id}`, player, p => {
       shouldGivePlayer(state, teamId);

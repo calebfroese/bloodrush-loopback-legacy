@@ -1,7 +1,7 @@
 module.exports = {
     GAME_WIN: 100,
-    GAME_TIE: 50,
-    GAME_LOSE: 25,
+    GAME_TIE: 80,
+    GAME_LOSE: 60,
     SEASON: {
         FIRST: 350,
         SECOND: 250,
