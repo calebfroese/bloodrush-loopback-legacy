@@ -47,6 +47,8 @@ module.exports =
               // Make sure that there is no bye's
               if (!teams.home || !teams.away) {
                 // Don't generate this game! One of the teams is a bye!
+                logging.info(`Not generating game ${gameFound.id
+                             } as teams were missing/byes`);
                 return Promise.reject();
               }
               return new Promise((resolve, reject) => {
@@ -76,6 +78,7 @@ module.exports =
                          gameFound.id, 1, quarterData,
                          {playerAttr: playerAttr, gameAttr: gameAttr})
                   .then(() => {
+                    logging.event(`${gameId} quarter 1 generated`);
                     return rollForPlayers(homePlayers, awayPlayers);
                   })
             })
@@ -89,6 +92,7 @@ module.exports =
                          gameFound.id, 2, quarterData,
                          {playerAttr: playerAttr, gameAttr: gameAttr})
                   .then(() => {
+                    logging.event(`${gameId} quarter 2 generated`);
                     return rollForPlayers(homePlayers, awayPlayers);
                   })
             })
@@ -102,6 +106,7 @@ module.exports =
                          gameFound.id, 3, quarterData,
                          {playerAttr: playerAttr, gameAttr: gameAttr})
                   .then(() => {
+                    logging.event(`${gameId} quarter 3 generated`);
                     return rollForPlayers(homePlayers, awayPlayers);
                   })
             })
@@ -115,7 +120,7 @@ module.exports =
                 playerAttr: playerAttr,
                 gameAttr: gameAttr
               }).then(() => {
-                logging.event('Generated game ' + gameId + ' successfully');
+                logging.event(`${gameId} quarter 4 generated. Done.`);
                 childProcess.fork(`runGame.js`, [gameId]);
                 callback({ok: true});
               })
@@ -157,46 +162,32 @@ function fetchTeams(homeId, awayId) {
  */
 function fetchPlayers(team) {
   return getPlayerArray(team)
-      .then(plyrIdsAtPos => {
-        return new Promise((resolve, reject) => {
-          internalQuery(
-              'get', `/teams/${team.id}/players`, {}, allPlayersArray => {
-                var players = [];
-                for (var i = 0; i < plyrIdsAtPos.length; i++) {
-                  allPlayersArray.forEach(player => {
-                    if (plyrIdsAtPos[i] && player.id === plyrIdsAtPos[i]) {
-                      players[i] = player;
-                    }
-                  });
-                }
-                setTimeout(() => {
-                  resolve(players);
-                }, 2500);
-              });
-        });
-      })
-      .catch(err => {
-        logging.error(err);
-        return Promise.reject();
-      });
 }
 
 function getPlayerArray(team) {
   // Resolves an array of ids to be used
   return new Promise((resolve, reject) => {
-    if (team.playerIdsAtPos && team.playerIdsAtPos.length > 0) {
-      resolve(team.playerIdsAtPos);
-    } else {
-      var playerIdsArray = [];
-      internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
-        allPlayersArray.forEach(p => {
-          if (p && p.id) {
-            playerIdsArray.push(p.id);
+    internalQuery('get', `/teams/${team.id}/players`, {}, allPlayersArray => {
+      var players = [];
+      if (team.playerIdsAtPos && team.playerIdsAtPos.length > 0) {
+        for (let i = 0; i < team.playerIdsAtPos.length; i++) {
+          allPlayersArray.forEach(player => {
+            if (player.id === team.playerIdsAtPos[i] &&
+                players.indexOf(player) === -1) {
+              players[i] = player;
+            }
+          });
+        }
+        allPlayersArray.forEach(player => {
+          if (players.indexOf(player) === -1) {
+            players.push(player);
           }
-        })
-        resolve(playerIdsArray);
-      });
-    }
+        });
+      } else {
+        players = allPlayersArray;
+      }
+      resolve(players);
+    });
   });
 }
 
@@ -310,7 +301,7 @@ function calculateUpset(players) {
  */
 function removeNotOkPlayers(players) {
   for (var i = 0; i < players.length; i++) {
-    if (players[i].state !== 'ok') {
+    if (players[i] && players[i].state !== 'ok') {
       players[i] = null;
     }
   }
