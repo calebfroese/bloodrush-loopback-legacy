@@ -12,7 +12,7 @@ module.exports =
         // Initializes the queue for the first time
         logging.info('Initializing the market manager');
 
-        // nodeSchedule.scheduleJob('* * */1 * *', () => {
+        nodeSchedule.scheduleJob('* * */1 * *', () => {
         logging.info('Market manager is managing default players');
         removeExisting()
             .then(players => {
@@ -22,7 +22,7 @@ module.exports =
               logging.error(`Unable to manage market players:`);
               console.error(err);
             })
-        // });
+        });
       }
     }
 
