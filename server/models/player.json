@@ -46,7 +46,11 @@
       "default": "ok"
     },
     "country": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "stateEnds": {
+      "type": "date"
     }
   },
   "validations": [],
