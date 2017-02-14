@@ -13,15 +13,15 @@ module.exports =
         logging.info('Initializing the market manager');
 
         nodeSchedule.scheduleJob('* * */1 * *', () => {
-        logging.info('Market manager is managing default players');
-        removeExisting()
-            .then(players => {
-              logging.info('Removed market players');
-            })
-            .catch(err => {
-              logging.error(`Unable to manage market players:`);
-              logging.error(err);
-            })
+          logging.info('Market manager is managing default players');
+          removeExisting()
+              .then(players => {
+                logging.info('Removed market players');
+              })
+              .catch(err => {
+                logging.error(`Unable to manage market players:`);
+                logging.error(err);
+              })
         });
       }
     }
@@ -29,7 +29,7 @@ module.exports =
 function
 removeExisting() {
   return new Promise((resolve, reject) => {
-    var filter = {where: {state: {inq: ['injured', 'market', 'training']}}};
+    var filter = {where: {teamId: 'market', state: 'market'}};
     internalQuery(
         'get', `/players?filter=${JSON.stringify(filter)}`, {}, playersToDelete => {
             playersToDelete.map(player => {
@@ -70,8 +70,8 @@ createPlayers() {
 }
 
 function calculateAskingPrice(player) {
-    var multiplier = 1;
-    var reducer = 1250;
-    var worth = (player.atk * player.def * player.spd) / reducer;
-    return Math.round(worth);
+  var multiplier = 1;
+  var reducer = 1250;
+  var worth = (player.atk * player.def * player.spd) / reducer;
+  return Math.round(worth);
 }

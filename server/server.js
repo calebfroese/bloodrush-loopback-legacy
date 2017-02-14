@@ -10,9 +10,9 @@ var path = require('path');
 var cors = require('cors');
 var morgan = require('morgan');
 var fs = require('fs');
-var rfs = require('rotating-file-stream')
+var rfs = require('rotating-file-stream');
 
-    var logging = require('./logging.js');
+var logging = require('./logging.js');
 var internalQuery = require('./custom/internal-query.js');
 var gameQueue = require('./custom/game/queue.js');
 var playerManager = require('./custom/player/manager.js');
