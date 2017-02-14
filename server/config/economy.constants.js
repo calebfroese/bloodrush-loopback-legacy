@@ -8,5 +8,6 @@ module.exports = {
         THIRD: 150
     },
     PLAYER_SELL_DEFAULT: 20,
-    MARKET_DEFAULT_PLAYER_AMT: 15
+    MARKET_CHEAP_PLAYER_AMT: 4,
+    MARKET_RANDMO_PLAYER_AMT: 4
 }

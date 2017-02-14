@@ -43,7 +43,7 @@ removeExisting() {
 function
 createPlayers() {
   // Create some random statted players
-  for (var i = 0; i < econConsts.MARKET_DEFAULT_PLAYER_AMT; i++) {
+  for (var i = 0; i < econConsts.MARKET_RANDOM_PLAYER_AMT; i++) {
     var player = playerGenerate.createPlayer();
     player.teamId = 'market';
     player.state = 'market';
@@ -54,7 +54,7 @@ createPlayers() {
     });
   }
   // Create some really bad players
-  for (var i = 0; i < econConsts.MARKET_DEFAULT_PLAYER_AMT; i++) {
+  for (var i = 0; i < econConsts.MARKET_CHEAP_PLAYER_AMT; i++) {
     var player = playerGenerate.createPlayer();
     player.teamId = 'market';
     player.state = 'market';

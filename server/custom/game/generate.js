@@ -29,7 +29,7 @@ module.exports =
         };
         var gameAttr = {
           speedMultiplier: 28,
-          roundDuration: 26000,
+          roundDuration: 22000,
           atkBase: 10,
           atkMultiplier: 10,
           fps: 1000 / 33,  // convert fps to milliseconds
