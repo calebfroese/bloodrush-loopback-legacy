@@ -30,7 +30,7 @@ module.exports =
               })
               .catch(err => {
                 logging.error('Error in player manager:');
-                console.error(err);
+                logging.error(err);
               })
         });
       }

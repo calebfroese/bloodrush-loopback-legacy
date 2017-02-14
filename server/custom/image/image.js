@@ -222,7 +222,7 @@ function joinImg(styles, teamId, frameName, cb) {
         `public/player/output/${teamId}-${frameName}.png`,
         function(err, image) {
           if (err) {
-            console.error(err);
+            logging.error(err);
             return;
           }
           image.flip(true, false)
@@ -232,7 +232,6 @@ function joinImg(styles, teamId, frameName, cb) {
     deleteFolderRecursive(`temp/player/${teamId}`);
     if (fs.existsSync(`temp/player/${teamId}`)) {
       fs.rmdirSync(`temp/player/${teamId}`);
-      console.log('calling back');
       cb({ok: true});
     }
   }, 200);

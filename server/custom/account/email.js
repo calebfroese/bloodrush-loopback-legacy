@@ -61,7 +61,7 @@ module.exports = {
         .catch(err => {
           callback(err);
           logging.error('Unable to add user to mailing list');
-          console.log(err);
+          logging.error(err);
         })
   }
 }

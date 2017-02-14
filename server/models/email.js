@@ -75,7 +75,6 @@ module.exports = function (Email) {
      * Adds a user to the mailing list
      */
     Email.addToMailingList = function (email, list, cb) {
-        console.log('email is', email);
         var customEmail = require('./../custom/account/email.js');
         var listId = (list === 'updates') ? emailConfig.mailingListIds.updates : emailConfig.mailingListIds.newsletter;
         customEmail.addToMailingList(email, listId, res => {

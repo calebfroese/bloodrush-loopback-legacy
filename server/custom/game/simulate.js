@@ -60,7 +60,7 @@ function ngOnInit() {
     pushData({isLive: true, quarter: 1, homeScore: 0, awayScore: 0});
     initializeGame(game.id);
   } else {
-    console.error('GAME HAS NOT YET BEEN RAN!!! ERR');
+    logging.error(`Cannot run a game that has not been generated! Gameid ${game.id}`);
   }
 }
 
@@ -439,9 +439,7 @@ function updatePlayerState(playerId, state, teamId) {
   internalQuery('get', `/players/${playerId}`, {}, player => {
     player.state = state;
     if (state === 'injured') {
-      console.log(player.id, 'inj');
       player = playerInjury(player);
-      console.log(player.id, 'inj2');
     }
     internalQuery('patch', `/players/${player.id}`, player, p => {
       shouldGivePlayer(state, teamId);

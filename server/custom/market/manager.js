@@ -16,11 +16,11 @@ module.exports =
         logging.info('Market manager is managing default players');
         removeExisting()
             .then(players => {
-              console.log(players);
+              logging.info('Removed market players');
             })
             .catch(err => {
               logging.error(`Unable to manage market players:`);
-              console.error(err);
+              logging.error(err);
             })
         });
       }
