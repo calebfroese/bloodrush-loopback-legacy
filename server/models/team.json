@@ -37,6 +37,11 @@
       "type": "number",
       "default": 0,
       "required": true
+    },
+    "experience": {
+      "type": "number",
+      "default": 0,
+      "required": true
     }
   },
   "validations": [],

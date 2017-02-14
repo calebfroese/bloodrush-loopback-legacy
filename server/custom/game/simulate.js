@@ -60,7 +60,8 @@ function ngOnInit() {
     pushData({isLive: true, quarter: 1, homeScore: 0, awayScore: 0});
     initializeGame(game.id);
   } else {
-    logging.error(`Cannot run a game that has not been generated! Gameid ${game.id}`);
+    logging.error(
+        `Cannot run a game that has not been generated! Gameid ${game.id}`);
   }
 }
 
@@ -459,11 +460,16 @@ function giveMoney() {
   }
 
   internalQuery('get', `/teams/${home.id}`, {}, homeTeam => {
+    var homeExp = (win === 'tie') ?
+        economyConsts.EXP.TIE :
+        (win === 'home' ? economyConsts.EXP.WIN : economyConsts.EXP.LOSE);
     var homePrize = (win === 'tie') ?
         economyConsts.GAME_TIE :
         (win === 'home' ? economyConsts.GAME_WIN : economyConsts.GAME_LOSE);
     homeTeam.money =
         (homeTeam.money) ? (homeTeam.money + homePrize) : homePrize;
+    homeTeam.experience =
+        (homeTeam.experience) ? (homeTeam.experience + homeExp) : homeExp;
     internalQuery('patch', `/teams/${home.id}`, homeTeam, savedTeam => {
       logging.info(
           home.id + ' awarded ' + homePrize + ' for result of win: ' + win +
@@ -471,11 +477,16 @@ function giveMoney() {
     })
   })
   internalQuery('get', `/teams/${away.id}`, {}, awayTeam => {
+    var awayExp = (win === 'tie') ?
+        economyConsts.EXP.TIE :
+        (win === 'away' ? economyConsts.EXP.WIN : economyConsts.EXP.LOSE);
     var awayPrize = (win === 'tie') ?
         economyConsts.GAME_TIE :
         (win === 'away' ? economyConsts.GAME_WIN : economyConsts.GAME_LOSE);
     awayTeam.money =
         (awayTeam.money) ? (awayTeam.money + awayPrize) : awayPrize;
+    awayTeam.experience =
+        (awayTeam.experience) ? (awayTeam.experience + awayExp) : awayExp;
     internalQuery('patch', `/teams/${away.id}`, awayTeam, savedTeam => {
       logging.info(
           away.id + ' awarded ' + awayPrize + ' for result of win: ' + win +
@@ -519,12 +530,14 @@ function playerInjury(player) {
   } else if (severity > 40 && severity < 80) {
     // Moderate injury (1-3 days)
     logging.info(`${player.id} suffered a moderate injury`);
-    player.stateEnds = moment().add(Math.floor(24 + Math.random() * 42), 'hours');
+    player.stateEnds =
+        moment().add(Math.floor(24 + Math.random() * 42), 'hours');
     return removeStats(player, 40);
   } else {
     // Major injury (2-5 days)
     logging.info(`${player.id} suffered a major injury`);
-    player.stateEnds = moment().add(Math.floor(42 + Math.random() * 120), 'hours');
+    player.stateEnds =
+        moment().add(Math.floor(42 + Math.random() * 120), 'hours');
     return removeStats(player, 60);
   }
 }

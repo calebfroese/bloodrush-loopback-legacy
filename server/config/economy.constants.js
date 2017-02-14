@@ -7,6 +7,11 @@ module.exports = {
         SECOND: 250,
         THIRD: 150
     },
+    EXP: {
+        WIN: 1500,
+        TIE: 1250,
+        LOSE: 1000
+    },
     PLAYER_SELL_DEFAULT: 20,
     MARKET_CHEAP_PLAYER_AMT: 4,
     MARKET_RANDMO_PLAYER_AMT: 4
