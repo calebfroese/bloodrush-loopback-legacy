@@ -35,6 +35,11 @@
       "type": "hasMany",
       "model": "season",
       "foreignKey": ""
+    },
+    "chats": {
+      "type": "hasMany",
+      "model": "chat",
+      "foreignKey": ""
     }
   },
   "acls": [],
