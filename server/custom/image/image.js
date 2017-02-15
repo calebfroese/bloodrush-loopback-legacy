@@ -11,116 +11,36 @@ module.exports =
       createPlayers: (style, teamId, callback) => {
         createPlayerFolders(teamId);
 
-        // Frame 1
-        var useTheseStyles = [];
-        style.forEach(s => {
-          // For each part
-          if (s.selected || s.base) {
-            useTheseStyles.push(s);
-            createImg(
-                s, s.color, `public/player/gen/frame1/${s.name}.png`,
-                `temp/player/${teamId}/frame1/${s.name}.png`);
-          }
-        });
-        setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 'frame1');
-        }, WAIT_BEFORE_JOIN_IMG);
-
-        // Frame 4
-        var useTheseStyles = [];
-        style.forEach(s => {
-          // For each part
-          if (s.selected || s.base) {
-            useTheseStyles.push(s);
-            createImg(
-                s, s.color, `public/player/gen/frame4/${s.name}.png`,
-                `temp/player/${teamId}/frame4/${s.name}.png`);
-          }
-        });
-        setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 'frame4');
-        }, WAIT_BEFORE_JOIN_IMG);
-
-        // Frame 7
-        var useTheseStyles = [];
-        style.forEach(s => {
-          // For each part
-          if (s.selected || s.base) {
-            useTheseStyles.push(s);
-            createImg(
-                s, s.color, `public/player/gen/frame7/${s.name}.png`,
-                `temp/player/${teamId}/frame7/${s.name}.png`);
-          }
-        });
-        setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 'frame7');
-        }, WAIT_BEFORE_JOIN_IMG);
-
-        // Attack 1
-        var useTheseStyles = [];
-        style.forEach(s => {
-          // For each part
-          if (s.selected || s.base) {
-            useTheseStyles.push(s);
-            createImg(
-                s, s.color, `public/player/gen/attack1/${s.name}.png`,
-                `temp/player/${teamId}/attack1/${s.name}.png`);
-          }
-        });
-        setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 'attack1', x => {
-            callback(x);
-          });
-        }, WAIT_BEFORE_JOIN_IMG);
-
-        // Attack 2
-        var useTheseStyles = [];
-        style.forEach(s => {
-          // For each part
-          if (s.selected || s.base) {
-            useTheseStyles.push(s);
-            createImg(
-                s, s.color, `public/player/gen/attack2/${s.name}.png`,
-                `temp/player/${teamId}/attack2/${s.name}.png`);
-          }
-        });
-        setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 'attack2', x => {
-            callback(x);
-          });
-        }, WAIT_BEFORE_JOIN_IMG);
-
-        // Attack 3
-        var useTheseStyles = [];
-        style.forEach(s => {
-          // For each part
-          if (s.selected || s.base) {
-            useTheseStyles.push(s);
-            createImg(
-                s, s.color, `public/player/gen/attack3/${s.name}.png`,
-                `temp/player/${teamId}/attack3/${s.name}.png`);
-          }
-        });
-        setTimeout(() => {
-          createFrame(useTheseStyles, teamId, 'attack3', x => {
-            callback(x);
-          });
-        }, WAIT_BEFORE_JOIN_IMG);
+        Promise
+            .all([
+              createFrame(style, teamId, 'frame1'),
+              createFrame(style, teamId, 'frame4'),
+              createFrame(style, teamId, 'frame7'),
+              createFrame(style, teamId, 'attack1'),
+              createFrame(style, teamId, 'attack2'),
+              createFrame(style, teamId, 'attack3'),
+              createFrame(style, teamId, 'knockout1'),
+              createFrame(style, teamId, 'knockout2'),
+              createFrame(style, teamId, 'out1')
+            ])
+            .then(() => {
+              logging.info('Created player images for team ' + teamId);
+              callback({ok: true});
+            })
+            .catch(err => {
+              logging.error(err);
+              callback(err);
+            })
       },
-      createPart: (style, teamId) => {
-        if (fs.existsSync(`public/temp/player/${teamId}/frame1/preset`)) {
-          // Does the public directorry for the user exist? If not create
-          createImg(
-              style, style.color, `public/player/gen/frame1/${style.name}.png`,
-              `public/temp/player/${teamId}/frame1/${style.name
-              }-${style.color.r}.${style.color.g}.${style.color.b}.png`);
-        } else {
-          createPlayerFolders(teamId);
-          createImg(
-              style, style.color, `public/player/gen/frame1/${style.name}.png`,
-              `public/temp/player/${teamId}/frame1/${style.name
-              }-${style.color.r}.${style.color.g}.${style.color.b}.png`);
-        }
+      createPart: (style, teamId, callback) => {
+        createPlayerFolders(teamId);
+        createImg(
+            style, style.color, `public/player/gen/frame1/${style.name}.png`,
+            `public/temp/player/${teamId}/frame1/${style.name
+            }-${style.color.r}.${style.color.g}.${style.color.b}.png`,
+            cb => {
+              callback(cb);
+            })
       }
     }
 
@@ -149,6 +69,12 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`temp/player/${teamId}/attack2/preset`);
   fs.mkdirSync(`temp/player/${teamId}/attack3`);
   fs.mkdirSync(`temp/player/${teamId}/attack3/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/knockout1`);
+  fs.mkdirSync(`temp/player/${teamId}/knockout1/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/knockout2`);
+  fs.mkdirSync(`temp/player/${teamId}/knockout2/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/out1`);
+  fs.mkdirSync(`temp/player/${teamId}/out1/preset`);
   fs.mkdirSync(`public/temp/player/${teamId}`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
   fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
@@ -162,14 +88,47 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`public/temp/player/${teamId}/attack2/preset`);
   fs.mkdirSync(`public/temp/player/${teamId}/attack3`);
   fs.mkdirSync(`public/temp/player/${teamId}/attack3/preset`);
+  fs.mkdirSync(`public/temp/player/${teamId}/knockout1`);
+  fs.mkdirSync(`public/temp/player/${teamId}/knockout1/preset`);
+  fs.mkdirSync(`public/temp/player/${teamId}/knockout2`);
+  fs.mkdirSync(`public/temp/player/${teamId}/knockout2/preset`);
+  fs.mkdirSync(`public/temp/player/${teamId}/out1`);
+  fs.mkdirSync(`public/temp/player/${teamId}/out1/preset`);
 }
 
-function createFrame(useTheseStyles, teamId, frameName, cb) {
-  setTimeout(() => {
-    joinImg(useTheseStyles, teamId, frameName, x => {
-      cb(x);
+function createFrame(styles, teamId, frameName) {
+  var useTheseStyles = [];
+  var promises = [];
+  styles.forEach(s => {
+    // For each part
+    if (s.selected || s.base) {
+      useTheseStyles.push(s);
+      var prom = new Promise((resolve, reject) => {
+        console.log('created');
+        createImg(
+            s, s.color, `public/player/gen/${frameName}/${s.name}.png`,
+            `temp/player/${teamId}/${frameName}/${s.name}.png`, cb => {
+              console.log('resolved');
+              resolve();
+            });
+      });
+      promises.push(prom);
+    }
+  });
+  return Promise.all(promises).then(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        joinImg(useTheseStyles, teamId, frameName, x => {
+          if (x === null || x === undefined) {
+            // Delete temporary folders
+            resolve();
+          } else {
+            reject(x);
+          }
+        });
+      }, 500);
     });
-  }, 300);
+  })
 }
 
 var deleteFolderRecursive = function(path) {
@@ -186,10 +145,11 @@ var deleteFolderRecursive = function(path) {
   }
 };
 
-function createImg(style, rgba, fromUrl, toUrl) {
+function createImg(style, rgba, fromUrl, toUrl, callback) {
   if (style.hidden) {
     // Just copy the file over without recolor
     fs.createReadStream(fromUrl).pipe(fs.createWriteStream(toUrl));
+    callback();
   } else {
     fs.createReadStream(fromUrl)
         .pipe(new PNG({filterType: 4}))
@@ -204,35 +164,37 @@ function createImg(style, rgba, fromUrl, toUrl) {
             }
           }
           var pipe = this.pack().pipe(fs.createWriteStream(toUrl));
+          setTimeout(() => {
+            callback();
+          }, 1000);
         });
   }
 }
 
 function joinImg(styles, teamId, frameName, cb) {
-  var base = images(`temp/player/${teamId}/${frameName}/soles1.png`);
+  var base;
+  if (fs.existsSync(`temp/player/${teamId}/${frameName}/soles1.png`)) {
+    base = images(`public/player/gen/${frameName}/soles1.png`);
+  } else {
+    cb(null);
+    return;
+  }
   styles.forEach(
       s => {base.draw(
-          images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0,
-          0)})
-  base.save(
-      `public/player/output/${teamId}-${frameName}.png`, {quality: 100});
-  setTimeout(() => {
-    // Finished saving by now
-    jimp.read(
-        `public/player/output/${teamId}-${frameName}.png`,
-        function(err, image) {
-          if (err) {
-            logging.error(err);
-            return;
-          }
-          image.flip(true, false)
-              .write(`public/player/output/${teamId}-${frameName}r.png`);
-        });
-    // Delete temporary folders
-    deleteFolderRecursive(`temp/player/${teamId}`);
-    if (fs.existsSync(`temp/player/${teamId}`)) {
-      fs.rmdirSync(`temp/player/${teamId}`);
-      cb({ok: true});
-    }
-  }, 200);
+          images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0, 0)});
+  base.save(`public/player/output/${teamId}-${frameName}.png`, {quality: 100});
+  // Finished saving by now
+  jimp.read(
+      `public/player/output/${teamId}-${frameName}.png`, function(err, image) {
+        if (err) {
+          logging.error(err);
+          cb(err);
+          return;
+        }
+        image.flip(true, false)
+            .write(`public/player/output/${teamId}-${frameName}r.png`);
+      });
+  // Remove the directory
+  deleteFolderRecursive(`temp/player/${teamId}/${frameName}`)
+  cb();
 }

@@ -157,7 +157,7 @@ function checkRoundEnd() {
         homeScore: homeScore,
         awayScore: awayScore
       });
-      logging.info('Finished game ' + game.id);
+      logging.event('Finished game ' + game.id);
       gameFinished = true;
       giveMoney();
     } else if (qtrNum > 0 && qtrNum < 4) {
