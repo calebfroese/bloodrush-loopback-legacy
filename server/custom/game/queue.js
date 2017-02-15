@@ -15,6 +15,9 @@ module.exports =
             `gameManager.refreshGames`, '0 */1 * * *', () => {
               queueGames();
             });
+      },
+      refreshGames: () => {
+        queueGames();
       }
     }
 

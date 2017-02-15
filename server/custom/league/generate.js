@@ -70,9 +70,9 @@ module.exports = (leagueId, callback) => {
                             g.seasonId = createdSeason.id;
                             internalQuery('post', `/games`, g, () => { });
                         })
-                        logging.event('Season ' + createdSeason.id + ' generated for league ' + leagueId);
+                        logging.event('Season ' + createdSeason.id + ' generated for league ' + leagueId + '. Refreshing games queue...');
                         // Update the queued games
-                        gameQueue.updateTodaysQueue();
+                        gameQueue.refreshGames();
                     });
                 });
         });
