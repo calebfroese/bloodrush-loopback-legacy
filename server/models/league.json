@@ -23,6 +23,10 @@
     "teamIds": {
       "type": "array",
       "default": []
+    },
+    "requestTeamIds": {
+      "type": "array",
+      "default": []
     }
   },
   "validations": [],

@@ -24,7 +24,6 @@ module.exports = (leagueId, callback) => {
                 callback('Must have at least 2 players registered to a league to start a season');
                 return;
             }
-
             var regularGames = [];
             regularGames = shuffle(createRounds(teams, leagueId));
             var gamesThisSeason = regularGames.length;
@@ -50,8 +49,6 @@ module.exports = (leagueId, callback) => {
             for (var i = 1; i < use; i++) {
                 regularGames = regularGames.concat(shuffle(createRounds(teams, leagueId)));
             }
-
-
             // Fetch the season number
             getSeasonNumber(leagueId)
                 .then(seasonNumber => {
@@ -71,6 +68,7 @@ module.exports = (leagueId, callback) => {
                             internalQuery('post', `/games`, g, () => { });
                         })
                         logging.event('Season ' + createdSeason.id + ' generated for league ' + leagueId + '. Refreshing games queue...');
+                        callback();
                         // Update the queued games
                         gameQueue.refreshGames();
                     });
