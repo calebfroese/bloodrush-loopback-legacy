@@ -196,10 +196,12 @@ function joinImg(styles, teamId, frameName, outFrameName, cb) {
   styles.forEach(
       s => {base.draw(
           images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0, 0)});
-  base.save(`public/player/output/${teamId}-${outFrameName}.png`, {quality: 100});
+  base.save(
+      `public/player/output/${teamId}-${outFrameName}.png`, {quality: 100});
   // Finished saving by now
   jimp.read(
-      `public/player/output/${teamId}-${outFrameName}.png`, function(err, image) {
+      `public/player/output/${teamId}-${outFrameName}.png`,
+      function(err, image) {
         if (err) {
           logging.error(err);
           cb(err);
@@ -209,6 +211,8 @@ function joinImg(styles, teamId, frameName, outFrameName, cb) {
             .write(`public/player/output/${teamId}-${outFrameName}r.png`);
       });
   // Remove the directory
-  deleteFolderRecursive(`temp/player/${teamId}/${frameName}`)
-  cb();
+  setTimeout(() => {
+    deleteFolderRecursive(`temp/player/${teamId}/${frameName}`)
+    cb();
+  }, 1000);
 }
