@@ -186,32 +186,39 @@ function createImg(style, rgba, fromUrl, toUrl, callback) {
 }
 
 function joinImg(styles, teamId, frameName, outFrameName, cb) {
-  var base;
-  if (fs.existsSync(`temp/player/${teamId}/${frameName}/soles1.png`)) {
-    base = images(`public/player/gen/${frameName}/soles1.png`);
-  } else {
-    cb(null);
-    return;
-  }
-  styles.forEach(
-      s => {base.draw(
-          images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0, 0)});
-  base.save(
-      `public/player/output/${teamId}-${outFrameName}.png`, {quality: 100});
-  // Finished saving by now
-  jimp.read(
-      `public/player/output/${teamId}-${outFrameName}.png`,
-      function(err, image) {
-        if (err) {
-          logging.error(err);
-          cb(err);
-          return;
-        }
-        image.flip(true, false)
-            .write(`public/player/output/${teamId}-${outFrameName}r.png`);
-      });
-  // Remove the directory
   setTimeout(() => {
+    var base;
+    if (fs.existsSync(`temp/player/${teamId}/${frameName}/soles1.png`)) {
+      base = images(`public/player/gen/${frameName}/soles1.png`);
+    } else {
+      cb(null);
+      return;
+    }
+    styles.forEach(s => {
+      if (fs.existsSync(`temp/player/${teamId}/${frameName}/${s.name}.png`)) {
+        base.draw(
+            images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0, 0)
+      } else {
+        logging.error(
+            'Join image for team ' + teamId + ' failed as ' + s.name +
+            ' does not exist for frame ' + frameName);
+      }
+    });
+    base.save(
+        `public/player/output/${teamId}-${outFrameName}.png`, {quality: 100});
+    // Finished saving by now
+    jimp.read(
+        `public/player/output/${teamId}-${outFrameName}.png`,
+        function(err, image) {
+          if (err) {
+            logging.error(err);
+            cb(err);
+            return;
+          }
+          image.flip(true, false)
+              .write(`public/player/output/${teamId}-${outFrameName}r.png`);
+        });
+    // Remove the directory
     deleteFolderRecursive(`temp/player/${teamId}/${frameName}`)
     cb();
   }, 1000);
