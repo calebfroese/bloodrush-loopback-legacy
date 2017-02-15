@@ -191,7 +191,7 @@ function joinImg(styles, teamId, frameName, outFrameName, cb) {
     if (fs.existsSync(`temp/player/${teamId}/${frameName}/soles1.png`)) {
       base = images(`public/player/gen/${frameName}/soles1.png`);
     } else {
-      cb(null);
+      cb({error: `soles does not exist, cannot create ${frameName} for team ${teamId}`});
       return;
     }
     styles.forEach(s => {
@@ -220,6 +220,6 @@ function joinImg(styles, teamId, frameName, outFrameName, cb) {
         });
     // Remove the directory
     deleteFolderRecursive(`temp/player/${teamId}/${frameName}`)
-    cb();
+    cb(null);
   }, 1000);
 }
