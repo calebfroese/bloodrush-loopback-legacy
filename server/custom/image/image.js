@@ -32,14 +32,17 @@ module.exports =
               callback(err);
             })
       },
-      createPart: (style, teamId, callback) => {
+      createPreview: (style, teamId, callback) => {
+        console.log('createPreview here');
         createPlayerFolders(teamId);
-        createImg(
-            style, style.color, `public/player/gen/frame1/${style.name}.png`,
-            `public/temp/player/${teamId}/frame1/${style.name
-            }-${style.color.r}.${style.color.g}.${style.color.b}.png`,
-            cb => {
-              callback(cb);
+        createPreview(style, teamId)
+            .then(() => {
+              console.log('Frame created');
+              callback(null, {});
+            })
+            .catch(err => {
+              console.error('Frame ERROR');
+              callback(err);
             })
       }
     }
@@ -48,8 +51,6 @@ function createPlayerFolders(teamId) {
   // Make sure permafolders are there
   if (!fs.existsSync(`temp`)) fs.mkdirSync(`temp`);
   if (!fs.existsSync(`temp/player`)) fs.mkdirSync(`temp/player`);
-  if (!fs.existsSync(`public/temp`)) fs.mkdirSync(`public/temp`);
-  if (!fs.existsSync(`public/temp/player`)) fs.mkdirSync(`public/temp/player`);
   if (!fs.existsSync(`public/player`)) fs.mkdirSync(`public/player`);
   if (!fs.existsSync(`public/player/output`))
     fs.mkdirSync(`public/player/output`);
@@ -75,25 +76,8 @@ function createPlayerFolders(teamId) {
   fs.mkdirSync(`temp/player/${teamId}/knockout2/preset`);
   fs.mkdirSync(`temp/player/${teamId}/out1`);
   fs.mkdirSync(`temp/player/${teamId}/out1/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}`);
-  fs.mkdirSync(`public/temp/player/${teamId}/frame1`);
-  fs.mkdirSync(`public/temp/player/${teamId}/frame1/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/frame4`);
-  fs.mkdirSync(`public/temp/player/${teamId}/frame4/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/frame7`);
-  fs.mkdirSync(`public/temp/player/${teamId}/frame7/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/attack1`);
-  fs.mkdirSync(`public/temp/player/${teamId}/attack1/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/attack2`);
-  fs.mkdirSync(`public/temp/player/${teamId}/attack2/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/attack3`);
-  fs.mkdirSync(`public/temp/player/${teamId}/attack3/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/knockout1`);
-  fs.mkdirSync(`public/temp/player/${teamId}/knockout1/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/knockout2`);
-  fs.mkdirSync(`public/temp/player/${teamId}/knockout2/preset`);
-  fs.mkdirSync(`public/temp/player/${teamId}/out1`);
-  fs.mkdirSync(`public/temp/player/${teamId}/out1/preset`);
+  fs.mkdirSync(`temp/player/${teamId}/preview`);
+  fs.mkdirSync(`temp/player/${teamId}/preview/preset`);
 }
 
 function createFrame(styles, teamId, frameName) {
@@ -104,11 +88,9 @@ function createFrame(styles, teamId, frameName) {
     if (s.selected || s.base) {
       useTheseStyles.push(s);
       var prom = new Promise((resolve, reject) => {
-        console.log('created');
         createImg(
             s, s.color, `public/player/gen/${frameName}/${s.name}.png`,
             `temp/player/${teamId}/${frameName}/${s.name}.png`, cb => {
-              console.log('resolved');
               resolve();
             });
       });
@@ -118,7 +100,7 @@ function createFrame(styles, teamId, frameName) {
   return Promise.all(promises).then(() => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        joinImg(useTheseStyles, teamId, frameName, x => {
+        joinImg(useTheseStyles, teamId, frameName, frameName, x => {
           if (x === null || x === undefined) {
             // Delete temporary folders
             resolve();
@@ -129,6 +111,38 @@ function createFrame(styles, teamId, frameName) {
       }, 500);
     });
   })
+}
+
+function createPreview(styles, teamId) {
+  var useTheseStyles = [];
+  var promises = [];
+  styles.forEach(s => {
+    // For each part
+    if (s.selected || s.base) {
+      useTheseStyles.push(s);
+      var prom = new Promise((resolve, reject) => {
+        createImg(
+            s, s.color, `public/player/gen/frame1/${s.name}.png`,
+            `temp/player/${teamId}/frame1/${s.name}.png`, cb => {
+              resolve();
+            });
+      });
+      promises.push(prom);
+    }
+  });
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      joinImg(useTheseStyles, teamId, 'frame1', 'preview', x => {
+        if (x === null || x === undefined) {
+          console.log('PREVIEW IMAGES JOINED');
+          resolve();
+        } else {
+          console.log('PREVIEW IMAGES ERR');
+          reject(x);
+        }
+      });
+    }, 500);
+  });
 }
 
 var deleteFolderRecursive = function(path) {
@@ -171,7 +185,7 @@ function createImg(style, rgba, fromUrl, toUrl, callback) {
   }
 }
 
-function joinImg(styles, teamId, frameName, cb) {
+function joinImg(styles, teamId, frameName, outFrameName, cb) {
   var base;
   if (fs.existsSync(`temp/player/${teamId}/${frameName}/soles1.png`)) {
     base = images(`public/player/gen/${frameName}/soles1.png`);
@@ -182,17 +196,17 @@ function joinImg(styles, teamId, frameName, cb) {
   styles.forEach(
       s => {base.draw(
           images(`temp/player/${teamId}/${frameName}/${s.name}.png`), 0, 0)});
-  base.save(`public/player/output/${teamId}-${frameName}.png`, {quality: 100});
+  base.save(`public/player/output/${teamId}-${outFrameName}.png`, {quality: 100});
   // Finished saving by now
   jimp.read(
-      `public/player/output/${teamId}-${frameName}.png`, function(err, image) {
+      `public/player/output/${teamId}-${outFrameName}.png`, function(err, image) {
         if (err) {
           logging.error(err);
           cb(err);
           return;
         }
         image.flip(true, false)
-            .write(`public/player/output/${teamId}-${frameName}r.png`);
+            .write(`public/player/output/${teamId}-${outFrameName}r.png`);
       });
   // Remove the directory
   deleteFolderRecursive(`temp/player/${teamId}/${frameName}`)

@@ -4,14 +4,14 @@ module.exports = function(Image) {
   /**
    * Creates a part
    */
-  Image.createPart = function(data, cb) {
+  Image.createPreview = function(data, cb) {
     var customImage = require('./../custom/image/image.js');
-    customImage.createPart(data.style, data.teamId, res => {
-      cb(null, null);
+    customImage.createPreview(data.styles, data.teamId, res => {
+      cb(res);
     });
   };
-  Image.remoteMethod('createPart', {
-    http: {path: '/createPart', verb: 'post'},
+  Image.remoteMethod('createPreview', {
+    http: {path: '/createPreview', verb: 'post'},
     accepts:
         [{arg: 'data', type: 'object', http: {source: 'body'}, required: true}],
     returns: {arg: 'response', type: 'object'}
