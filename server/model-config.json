@@ -44,7 +44,7 @@
     }
   },
   "chat": {
-    "dataSource": "mongoDB",
+    "dataSource": "db",
     "public": true
   },
   "season": {
