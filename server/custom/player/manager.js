@@ -10,7 +10,7 @@ module.exports =
         // Initializes the queue for the first time
         logging.info('Initializing the player manager');
 
-        nodeSchedule.scheduleJob(`playerManager.refreshPlayers`, '* * */1 * *', () => {
+        nodeSchedule.scheduleJob(`playerManager.refreshPlayers`, '0 0 */1 * *', () => {
           logging.info('Player manager is managing states');
           findPlayer({where: {state: {inq: ['injured', 'market', 'training']}}})
               .then(players => {
