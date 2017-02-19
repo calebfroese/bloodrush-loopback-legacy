@@ -10,12 +10,16 @@ module.exports = {
   simulate: (gId) => {
     // Simulates an entire game so that player injured/dead and score can be
     // told
+    logging.info(`Preparing to fetch the game... ${gId}`);
     internalQuery('get', `/games/${gId}`, {}, g => {
       game = g;
+      logging.info(`Game fetched. Fetching home team ${g.homeId}`);
       internalQuery('get', `/teams/${g.homeId}`, {}, h => {
         home = h;
+        logging.info(`Home team fetched. Fetching away team ${g.awayId}`);
         internalQuery('get', `/teams/${g.awayId}`, {}, a => {
           away = a;
+          logging.info(`Away team fetched. Calling init`);
           ngOnInit();
         });
       });
@@ -58,6 +62,7 @@ function ngOnInit() {
   data = game.data;
   if (game && game.round && game.qtr[1].homePlayers) {
     pushData({isLive: true, quarter: 1, homeScore: 0, awayScore: 0});
+    logging.info(`Simulation initializing game ${game.id}`);
     initializeGame(game.id);
   } else {
     logging.error(
