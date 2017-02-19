@@ -40,6 +40,11 @@
       "type": "hasMany",
       "model": "chat",
       "foreignKey": ""
+    },
+    "owner": {
+      "type": "belongsTo",
+      "model": "team",
+      "foreignKey": "ownerId"
     }
   },
   "acls": [],
