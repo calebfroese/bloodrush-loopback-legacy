@@ -11,20 +11,26 @@ module.exports =
       init: () => {
         // Initializes the queue for the first time
         logging.info('Initializing the market manager');
-
-        nodeSchedule.scheduleJob(`marketManager.refreshPlayers`, '0 0 0 */1 *', () => {
-          logging.info('Market manager is managing default players');
-          removeExisting()
-              .then(players => {
-                logging.info('Removed market players');
-              })
-              .catch(err => {
-                logging.error(`Unable to manage market players:`);
-                logging.error(err);
-              })
-        });
+        refreshMarketPlayers();
+        nodeSchedule.scheduleJob(
+            `marketManager.refreshPlayers`, '0 0 0 */1 *', () => {
+              refreshMarketPlayers();
+            });
       }
     }
+
+function
+refreshMarketPlayers() {
+  logging.info('Market manager is managing default players');
+  removeExisting()
+      .then(players => {
+        logging.info('Removed market players');
+      })
+      .catch(err => {
+        logging.error(`Unable to manage market players:`);
+        logging.error(err);
+      })
+}
 
 function
 removeExisting() {

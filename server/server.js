@@ -40,9 +40,32 @@ var storage = multer.diskStorage({
     cb(null, req.params.teamId + '.png')
   }
 });
+var storageAnthem = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './public/teamsounds')
+  },
+  filename: function(req, file, cb) {
+    cb(null, req.params.teamId + '.mp3')
+  }
+});
 var upload = multer({storage: storage});
+var uploadAnthem = multer({storage: storageAnthem});
 
+// team logo image
 app.post('/file/:teamId', upload.any(), (req, res) => {
+  if (!req.params.teamId) {
+    return;
+  }
+  res.json(req.files.map(file => {
+    var ext = path.extname(file.originalname);
+    return {
+      originalName: req.params.teamId, filename: file.filename
+    }
+  }));
+});
+
+// team anthem
+app.post('/fileAnthem/:teamId', uploadAnthem.any(), (req, res) => {
   if (!req.params.teamId) {
     return;
   }
