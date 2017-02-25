@@ -47,12 +47,12 @@
       "foreignKey": "ownerId"
     },
     "teams": {
-      "type": "belongsTo",
+      "type": "hasMany",
       "model": "team",
       "foreignKey": "teamIds"
     },
     "reqTeams": {
-      "type": "belongsTo",
+      "type": "hasMany",
       "model": "team",
       "foreignKey": "requestTeamIds"
     }
