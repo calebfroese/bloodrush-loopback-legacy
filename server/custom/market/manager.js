@@ -13,7 +13,7 @@ module.exports =
         logging.info('Initializing the market manager');
         refreshMarketPlayers();
         nodeSchedule.scheduleJob(
-            `marketManager.refreshPlayers`, '0 0 0 */1 *', () => {
+            `marketManager.refreshPlayers`, '*/7 * * * *', () => {
               refreshMarketPlayers();
             });
       }
