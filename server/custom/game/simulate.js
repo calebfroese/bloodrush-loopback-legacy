@@ -446,6 +446,8 @@ function updatePlayerState(playerId, state, teamId) {
     player.state = state;
     if (state === 'injured') {
       player = playerInjury(player);
+    } else if (state === 'dead') {
+      player.teamId = undefined;
     }
     internalQuery('patch', `/players/${player.id}`, player, p => {
       shouldGivePlayer(state, teamId);
