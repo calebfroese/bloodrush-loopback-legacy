@@ -45,16 +45,6 @@
       "type": "belongsTo",
       "model": "team",
       "foreignKey": "ownerId"
-    },
-    "teams": {
-      "type": "hasMany",
-      "model": "team",
-      "foreignKey": "teamIds"
-    },
-    "reqTeams": {
-      "type": "hasMany",
-      "model": "team",
-      "foreignKey": "requestTeamIds"
     }
   },
   "acls": [],

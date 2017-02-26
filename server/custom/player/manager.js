@@ -14,7 +14,7 @@ module.exports =
           logging.info('Player manager is managing states');
           findPlayer({where: {state: {inq: ['injured', 'market', 'training']}}})
               .then(players => {
-                players.map(player => {
+                players.forEach(player => {
                   if (stateEnded(player)) {
                     // The player is no longer in a temp state
                     var oldState = player.state;
@@ -39,7 +39,7 @@ module.exports =
 function findPlayer(query) {
   return new Promise((resolve, reject) => {
     internalQuery(
-        'get', `/players?filter=${JSON.stringify(query)}`, {},
+        'get', `/players?filter={"where": {"state": {"inq": ["injured", "market", "training"]}}}`, {},
         players => {resolve(players)});
   });
 }
