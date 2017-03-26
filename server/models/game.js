@@ -38,16 +38,21 @@ module.exports = function(Game) {
   /**
    * Returns all games to be played today
    */
-  Game.allOnDate = function(date, cb) {
+  Game.allOnDate = function(date, leagueId, cb) {
     var allOnDate = require('./../custom/game/allOnDate.js');
-    allOnDate(date, response => {
+    allOnDate(date, leagueId, response => {
       cb(null, response);
     })
   };
   Game.remoteMethod('allOnDate', {
     http: {path: '/allOnDate', verb: 'get'},
     accepts: [
-      {arg: 'date', type: 'string', http: {source: 'query'}, required: false}
+      {arg: 'date', type: 'string', http: {source: 'query'}, required: true}, {
+        arg: 'leagueId',
+        type: 'string',
+        http: {source: 'query'},
+        required: true
+      }
     ],
     returns: {arg: 'games', type: 'any'}
   });

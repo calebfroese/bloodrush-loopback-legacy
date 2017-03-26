@@ -6,6 +6,9 @@
   "options": {
     "validateUpsert": true
   },
+  "scope": {
+    "limit": 100
+  },
   "properties": {
     "first": {
       "type": "string",
