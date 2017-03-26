@@ -3,7 +3,7 @@ var internalQuery = require('./../internal-query.js');
 var logging = require('./../../logging.js');
 var gameQueue = require('./../game/queue.js');
 
-const IDEAL_TOTAL_GAMES_PLAYED = 26; // season matcher will try to get close to this value of games played (therefore days)
+const IDEAL_TOTAL_GAMES_PLAYED = 30; // season matcher will try to get close to this value of games played (therefore days)
 var nextGameDate = moment();
 var roundNumber = 1;
 var gameNumber = 1;
