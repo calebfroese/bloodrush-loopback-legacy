@@ -2,26 +2,25 @@ var faker = require('faker');
 
 module.exports =
     {
-      createPlayer: () => {
-        return createPlayer();
+      createPlayer: (bad) => {
+        return createPlayer(bad);
       }
     }
 
-function
-createPlayer() {
+function createPlayer(bad) {
   var player = {}
   // Luck
-  var luck = genLuck();
+  var luck = bad ? genLuck() / 2 : genLuck();
   // Name
   player.first = faker.name.firstName(0);
   player.last = faker.name.lastName();
   player.country = genCountry();
   // Speed / Weight
-  player.spd = Math.floor(genNumber(30, 100) + luck / 4);
-  player.kg = Math.floor(genNumber(80, 120));
+  player.spd = Math.floor(genNumber(30, bad ? 80 : 100) + luck / 4);
+  player.kg = Math.floor(genNumber(80, bad ? 105 : 120));
   // Atk / Def
-  player.atk = Math.floor(genNumber(30, 100) + luck / 4);
-  player.def = Math.floor(genNumber(30, 100) + luck / 4);
+  player.atk = Math.floor(genNumber(30, bad ? 80 : 100) + luck / 4);
+  player.def = Math.floor(genNumber(30, bad ? 80 : 100) + luck / 4);
   // Recovery rate
   player.rec = Math.floor(genNumber(0, 30));
   return player;

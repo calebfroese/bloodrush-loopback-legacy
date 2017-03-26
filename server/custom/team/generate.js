@@ -36,7 +36,7 @@ module.exports =
 function generatePlayers(teamId) {
   // Return an array of team members
   for (var i = 0; i < config.generateTeamPlayerAmt; i++) {
-    var player = genPlayer.createPlayer(teamId);
+    var player = genPlayer.createPlayer(true);
     // Runs async
     player.teamId = teamId;
     player.state = 'ok';
