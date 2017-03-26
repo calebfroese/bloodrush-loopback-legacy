@@ -26,7 +26,10 @@ module.exports = (leagueId, callback) => {
             }
             var regularGames = [];
             regularGames = shuffle(createRounds(teams, leagueId));
-            var gamesThisSeason = regularGames.length;
+            var roundPerRobin = 0 + roundNumber; // prevent reference
+            console.log('roundPerRobin', roundPerRobin);
+            // var gamesThisSeason = regularGames.length;
+            var gamesThisSeason = roundPerRobin;
 
             var over;
             var under;
@@ -40,15 +43,24 @@ module.exports = (leagueId, callback) => {
                 }
             }
             // Should we go over the amount of games, or under, dpeending which is closer
+            console.log('over number is', (over * gamesThisSeason));
+            console.log('under number is', (under * gamesThisSeason));
             if (IDEAL_TOTAL_GAMES_PLAYED - (under * gamesThisSeason) > (over * gamesThisSeason) - IDEAL_TOTAL_GAMES_PLAYED) {
                 // Use over
                 use = over;
+            console.log('using over, will create', use);
             } else {
                 use = under;
+            console.log('using under, will create', use);
             }
-            for (var i = 1; i < use; i++) {
+            console.log('use is', use);
+            for (var i = 1; i < use + 1; i++) {
                 regularGames = regularGames.concat(shuffle(createRounds(teams, leagueId)));
             }
+            console.log('created', regularGames.length, 'games');
+            console.log('created', roundNumber, 'rounds');
+
+
             // Fetch the season number
             getSeasonNumber(leagueId)
                 .then(seasonNumber => {
@@ -79,7 +91,7 @@ module.exports = (leagueId, callback) => {
 
 function createRounds(teams, leagueId) {
     // Logic from: http://stackoverflow.com/questions/6648512/scheduling-algorithm-for-a-round-robin-tournament
-    // Create a round where each player will play everyone else once
+    // Create an array of rounds where each player will play everyone else once
     var teamCount = teams.length;
     // If there is an odd number, add a null (which is a bye)
     if (teamCount % 2 === 1) {
